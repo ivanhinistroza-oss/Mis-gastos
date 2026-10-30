@@ -1,0 +1,42 @@
+rules_version = '2';
+
+// Reglas de Mis gastos. Se pegan en Firebase → Firestore → Reglas → Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function dueno(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    // Cada persona lee y escribe solo lo suyo: su perfil y sus movimientos.
+    match /usuarios/{uid} {
+      allow read, write: if dueno(uid);
+      match /movs/{id} {
+        allow read, write: if dueno(uid);
+      }
+    }
+
+    // Buzón: el código largo y secreto es la dirección donde los celulares dejan avisos.
+    match /buzon/{codigo} {
+      allow get, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow create: if request.auth != null
+        && codigo.size() >= 20
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid;
+
+      // MacroDroid y Atajos escriben sin iniciar sesión: solo pueden dejar un texto corto
+      // en un buzón que exista. No pueden leer nada.
+      match /avisos/{id} {
+        allow create: if exists(/databases/$(database)/documents/buzon/$(codigo))
+          && request.resource.data.keys().hasOnly(['texto', 'fuente'])
+          && request.resource.data.texto is string
+          && request.resource.data.texto.size() > 0
+          && request.resource.data.texto.size() <= 3000
+          && (!('fuente' in request.resource.data)
+              || (request.resource.data.fuente is string && request.resource.data.fuente.size() <= 20));
+        allow read, delete: if request.auth != null
+          && get(/databases/$(database)/documents/buzon/$(codigo)).data.uid == request.auth.uid;
+      }
+    }
+  }
+}

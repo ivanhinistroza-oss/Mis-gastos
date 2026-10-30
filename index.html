@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mis gastos</title>
+<style>
+:root {
+  --bg: #f5f6f8; --card: #fff; --txt: #1d2330; --muted: #6b7280; --line: #e3e6eb;
+  --pri: #6c2bd9; --pri-txt: #fff; --gasto: #c0392b; --ingreso: #1e8e4e; --warn: #b7791f;
+  --bar: #8b5cf6; --bar2: #c4b5fd;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12141a; --card: #1c1f27; --txt: #e8eaf0; --muted: #9aa1ad; --line: #2c303a;
+    --pri: #8b5cf6; --gasto: #ef6b5b; --ingreso: #4cc47f; --warn: #e3a547;
+    --bar: #8b5cf6; --bar2: #4c3a7a;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--txt); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); }
+.top { max-width: 820px; margin: 0 auto; padding: 10px 16px 0; }
+h1 { font-size: 20px; margin: 0 0 8px; }
+nav { display: flex; gap: 4px; overflow-x: auto; }
+nav button { flex: 1; background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 6px; font: inherit; color: var(--muted); cursor: pointer; white-space: nowrap; }
+nav button.on { color: var(--pri); border-bottom-color: var(--pri); font-weight: 600; }
+main { max-width: 820px; margin: 0 auto; padding: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+h2 { font-size: 16px; margin: 0 0 6px; }
+h3 { font-size: 14px; margin: 14px 0 6px; color: var(--muted); font-weight: 600; }
+.muted { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+textarea, input, select { width: 100%; font: inherit; color: var(--txt); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+textarea { resize: vertical; }
+label { display: block; font-size: 12px; color: var(--muted); }
+label > input, label > select { margin-top: 2px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+button.b { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--txt); cursor: pointer; }
+button.pri { background: var(--pri); color: var(--pri-txt); border-color: var(--pri); }
+button.peligro { color: var(--gasto); }
+.prev { border-left: 4px solid var(--pri); }
+.prev.dup { border-left-color: var(--warn); }
+.prev .orig { font-size: 12px; color: var(--muted); white-space: pre-wrap; max-height: 3.2em; overflow: hidden; margin-bottom: 8px; }
+.aviso { font-size: 12px; color: var(--warn); margin-bottom: 6px; }
+.chk { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--txt); margin-bottom: 8px; }
+.chk input { width: auto; }
+.filtros { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dia { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin: 14px 0 4px; }
+.mov { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 6px; cursor: pointer; width: 100%; text-align: left; font: inherit; color: inherit; }
+.ico { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; }
+.mov .info { flex: 1; min-width: 0; }
+.mov .dest { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mov .det { font-size: 12px; color: var(--muted); }
+.monto { font-weight: 700; white-space: nowrap; }
+.g { color: var(--gasto); } .i { color: var(--ingreso); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.kpi .t { font-size: 12px; color: var(--muted); }
+.kpi .v { font-size: 20px; font-weight: 700; }
+.kpi .s { font-size: 12px; color: var(--muted); }
+.hbar { display: grid; grid-template-columns: minmax(90px, 30%) 1fr auto; gap: 8px; align-items: center; font-size: 13px; margin: 5px 0; }
+.hbar .tr { background: var(--bg); border-radius: 4px; height: 12px; overflow: hidden; }
+.hbar .fi { background: var(--bar); height: 100%; border-radius: 4px; }
+.hbar .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dias { display: flex; align-items: flex-end; gap: 2px; height: 120px; padding-top: 6px; }
+.dias div { flex: 1; background: var(--bar); border-radius: 2px 2px 0 0; min-height: 1px; position: relative; }
+.dias div.cero { background: var(--bar2); }
+.ejes { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+.meta { height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; margin: 6px 0 4px; }
+.meta div { height: 100%; background: var(--ingreso); }
+.meta div.alto { background: var(--warn); }
+.meta div.pasado { background: var(--gasto); }
+.vacio { text-align: center; color: var(--muted); padding: 30px 10px; }
+dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--card); color: var(--txt); width: min(480px, calc(100vw - 32px)); padding: 16px; }
+dialog::backdrop { background: rgba(0, 0, 0, .45); }
+#toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: #222; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100vw - 32px); }
+#toast.ver { opacity: 1; }
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>Mis gastos</h1>
+    <nav id="tabs">
+      <button data-v="agregar" class="on">Agregar</button>
+      <button data-v="movs">Movimientos</button>
+      <button data-v="resumen">Resumen</button>
+      <button data-v="ajustes">Ajustes</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section id="v-agregar" hidden>
+    <div class="card" id="gmailAviso" hidden>
+      <h2>Correos del banco</h2>
+      <p class="muted">Toca para traer los gastos que llegaron a tu Gmail.</p>
+      <button class="b pri" id="btnGmailAviso">Revisar correos</button>
+    </div>
+    <div class="card">
+      <h2>Pegar avisos</h2>
+      <p class="muted">Copia el mensaje de Yape o Plin, o el correo o SMS del banco, y pégalo aquí. Puedes pegar varios a la vez, separados por una línea en blanco.</p>
+      <textarea id="pegar" rows="6" placeholder="Ej.: ¡Yapeaste! S/ 25.00 a Juan Pérez"></textarea>
+      <div class="row">
+        <button class="b pri" id="btnLeer">Leer avisos</button>
+        <button class="b" id="btnPortapapeles">Pegar del portapapeles</button>
+      </div>
+    </div>
+    <div id="previa"></div>
+    <div class="card">
+      <h2>Agregar a mano</h2>
+      <div id="manual"></div>
+      <div class="row"><button class="b pri" id="btnManual">Guardar</button></div>
+    </div>
+  </section>
+
+  <section id="v-movs" hidden>
+    <div class="card filtros">
+      <label>Mes<input type="month" id="fMes"></label>
+      <label>Medio<select id="fMedio"></select></label>
+      <label>Categoría<select id="fCat"></select></label>
+      <label>Buscar<input type="search" id="fTxt" placeholder="Nombre, nota…"></label>
+    </div>
+    <div id="lista"></div>
+  </section>
+
+  <section id="v-resumen" hidden>
+    <div class="card"><label>Mes<input type="month" id="rMes"></label></div>
+    <div id="resumen"></div>
+  </section>
+
+  <section id="v-entrar" hidden>
+    <div class="card">
+      <h2>Bienvenido</h2>
+      <p class="muted">Lleva en orden lo que gastas con Yape, Plin y tarjetas. Entra con tu cuenta de Google: tus gastos quedan guardados y los ves en cualquier celular o computadora. Nadie más puede verlos.</p>
+      <p class="muted" id="entrarMsg">Cargando…</p>
+      <button class="b pri" id="btnEntrar" hidden>Entrar con Google</button>
+    </div>
+  </section>
+
+  <section id="v-ajustes" hidden>
+    <div class="card" id="cuenta" hidden>
+      <h2>Tu cuenta</h2>
+      <p class="muted" id="cuentaCorreo"></p>
+      <button class="b" id="btnSalir">Salir</button>
+    </div>
+    <div class="card" id="celular" hidden>
+      <h2>Avisos desde el celular</h2>
+      <p class="muted">MacroDroid (Android) o Atajos (iPhone) mandan aquí los avisos de Yape y del banco. Usa esta dirección al configurarlos; la guía explica cada paso. No la compartas: con ella cualquiera podría mandarte avisos.</p>
+      <label>Dirección (URL)<input id="buzonUrl" readonly></label>
+      <div class="row">
+        <button class="b" id="btnCopiarUrl">Copiar dirección</button>
+        <button class="b" id="btnCopiarCuerpo">Copiar cuerpo para MacroDroid</button>
+      </div>
+      <div class="row">
+        <button class="b" id="btnProbar">Mandar un aviso de prueba</button>
+        <button class="b peligro" id="btnNuevoCodigo">Cambiar dirección</button>
+      </div>
+    </div>
+    <div class="card" id="correo" hidden>
+      <h2>Correos del banco</h2>
+      <p class="muted" id="gmailEstado"></p>
+      <div class="row">
+        <button class="b pri" id="btnGmail">Conectar Gmail</button>
+        <button class="b" id="btnGmailRevisar">Revisar ahora</button>
+        <button class="b peligro" id="btnGmailQuitar">Desconectar Gmail</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Presupuesto mensual</h2>
+      <p class="muted">Cuánto quieres gastar como máximo cada mes. Déjalo en 0 si no quieres usarlo.</p>
+      <input type="number" id="presupuesto" min="0" step="10" inputmode="decimal">
+      <div class="row"><button class="b pri" id="btnPresu">Guardar presupuesto</button></div>
+    </div>
+    <div class="card">
+      <h2>Copias de seguridad</h2>
+      <p class="muted" id="avisoLocal">Tus gastos se guardan solo en este navegador. Si borras los datos del navegador o cambias de celular, se pierden. Descarga una copia cada cierto tiempo.</p>
+      <div class="row">
+        <button class="b" id="btnExportar">Descargar copia (.json)</button>
+        <button class="b" id="btnImportar">Cargar copia</button>
+        <button class="b" id="btnCsv">Descargar para Excel (.csv)</button>
+      </div>
+      <input type="file" id="archivo" accept=".json,application/json" hidden>
+    </div>
+    <div class="card">
+      <h2>Borrar todo</h2>
+      <p class="muted" id="borrarTexto">Elimina todos los movimientos de este navegador. No se puede deshacer.</p>
+      <button class="b peligro" id="btnBorrarTodo">Borrar todos los movimientos</button>
+    </div>
+  </section>
+</main>
+
+<dialog id="dlg">
+  <h2>Editar movimiento</h2>
+  <div id="dlgCampos"></div>
+  <div class="row">
+    <button class="b pri" id="dlgGuardar">Guardar</button>
+    <button class="b" id="dlgCerrar">Cancelar</button>
+    <button class="b peligro" id="dlgBorrar" style="margin-left:auto">Eliminar</button>
+  </div>
+</dialog>
+
+<div id="toast"></div>
+
+<script>
+const KEY = "gastos.data";
+const CATS = ["Comida", "Supermercado", "Transporte", "Servicios", "Salud", "Casa", "Ropa",
+  "Entretenimiento", "Suscripciones", "Educación", "Familia", "Transferencias", "Ingreso", "Otros"];
+const MEDIOS = ["Yape", "Plin", "Tarjeta débito", "Tarjeta crédito", "Transferencia", "Efectivo", "Otro"];
+const COLOR_MEDIO = {
+  "Yape": "#742284", "Plin": "#00a5b5", "Tarjeta débito": "#2563eb", "Tarjeta crédito": "#d97706",
+  "Transferencia": "#0f766e", "Efectivo": "#4b7a2a", "Otro": "#6b7280"
+};
+// Palabras que sugieren una categoría cuando aún no se aprendió el destinatario.
+const REGLAS = [
+  [/plaza ?vea|tottus|\bmetro\b|\bwong\b|\bmass\b|tambo|oxxo|makro|vivanda|mercado|minimarket|bodega/i, "Supermercado"],
+  [/uber|cabify|indrive|didi|taxi|grifo|primax|repsol|petroper|pecsa|peaje|metropolitano|\bbus\b|estacionamiento/i, "Transporte"],
+  [/rappi|pedidos ?ya|kfc|bembos|pardos|norky|starbucks|mcdonald|burger|pizza|chifa|restaurant|cevicher|poller|caf[eé]|panader/i, "Comida"],
+  [/netflix|spotify|disney|hbo|\bmax\b|prime video|youtube|apple\.com|google|icloud|chatgpt|openai/i, "Suscripciones"],
+  [/claro|movistar|entel|bitel|luz del sur|enel|sedapal|calidda|win internet|wow/i, "Servicios"],
+  [/inkafarma|mifarma|farmacia|botica|cl[ií]nica|m[eé]dic|laboratorio|dental/i, "Salud"],
+  [/sodimac|promart|maestro|ferreter/i, "Casa"],
+  [/saga|ripley|oechsle|zara|h&m|adidas|nike|bata\b/i, "Ropa"],
+  [/cine|cineplanet|cinemark|teleticket|joinnus|steam|playstation|xbox/i, "Entretenimiento"],
+  [/universidad|colegio|instituto|academia|libreria|udemy|coursera/i, "Educación"]
+];
+
+// Servida por internet (GitHub Pages, localhost): cada persona entra con Google y sus datos van a Firebase.
+// Abierta como archivo (file://): los datos quedan solo en este navegador.
+const FB = location.protocol === "http:" || location.protocol === "https:";
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBLPiBlIfKQpP47B0Fcs2ciiTL00rW8jhM",
+  authDomain: "mis-gastos-64b90.firebaseapp.com",
+  projectId: "mis-gastos-64b90",
+  storageBucket: "mis-gastos-64b90.firebasestorage.app",
+  messagingSenderId: "729052975602",
+  appId: "1:729052975602:web:1a1395a593c02595ca9b6b"
+};
+const FB_SDK = "https://www.gstatic.com/firebasejs/12.19.0/";
+const GMAIL_PERMISO = "https://www.googleapis.com/auth/gmail.readonly";
+// Correos que se revisan. Si tu banco no aparece, agrega su nombre dentro de los paréntesis.
+const GMAIL_BUSQUEDA = 'from:(bcp OR interbank OR bbva OR scotiabank OR yape OR plin OR banbif OR pichincha OR "banco de la nacion")';
+
+let data = FB ? { movs: [], aprendido: {}, presupuesto: 0 } : cargar();
+let previa = [];
+let editando = null;
+let fb = null;        // { A, F, fs, auth }
+let usuario = null;   // usuario de Firebase que entró
+let perfil = {};      // usuarios/{uid}: codigo, presupuesto, aprendido, gmail, gmailDesde
+let cargado = false;  // ya llegaron los movimientos de Firebase
+let escuchas = [];
+
+// ---------- Datos ----------
+function cargar() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY));
+    if (d && Array.isArray(d.movs)) return { movs: d.movs, aprendido: d.aprendido || {}, presupuesto: +d.presupuesto || 0 };
+  } catch (e) {}
+  return { movs: [], aprendido: {}, presupuesto: 0 };
+}
+// ops dice qué cambió, para mandar a Firebase solo eso:
+// { movs: [creados o editados], borrar: [ids], ajustes: true }
+function guardar(ops = {}) {
+  if (!FB) {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); return true; }
+    catch (e) { toast("No se pudo guardar en este navegador"); return false; }
+  }
+  if (!usuario) { toast("Primero entra con tu cuenta"); return false; }
+  const { F, fs } = fb;
+  const lotes = [F.writeBatch(fs)];
+  let n = 0;
+  const poner = (fn) => {
+    if (n === 450) { lotes.push(F.writeBatch(fs)); n = 0; }  // Firestore acepta hasta 500 cambios por lote
+    fn(lotes[lotes.length - 1]); n++;
+  };
+  for (const m of ops.movs || []) poner((b) => b.set(docMov(m.id), m));
+  for (const id of ops.borrar || []) poner((b) => b.delete(docMov(id)));
+  if (ops.ajustes) poner((b) => b.set(docPerfil(), { presupuesto: data.presupuesto, aprendido: data.aprendido }, { merge: true }));
+  // Sin internet, Firestore guarda el cambio en el aparato y lo envía al volver la conexión.
+  lotes.forEach((b) => b.commit().catch(falloNube));
+  return true;
+}
+
+// ---------- Firebase ----------
+function docPerfil() { return fb.F.doc(fb.fs, "usuarios", usuario.uid); }
+function docMov(id) { return fb.F.doc(fb.fs, "usuarios", usuario.uid, "movs", id); }
+function falloNube(e) {
+  console.error(e);
+  toast(e && e.code === "permission-denied" ? "Firebase no dio permiso. Revisa las reglas de seguridad." : "No se pudo guardar. Revisa tu internet.");
+}
+async function iniciarFirebase() {
+  ir("entrar");
+  try {
+    const [appMod, A, F] = await Promise.all([
+      import(FB_SDK + "firebase-app.js"),
+      import(FB_SDK + "firebase-auth.js"),
+      import(FB_SDK + "firebase-firestore.js")
+    ]);
+    const app = appMod.initializeApp(FIREBASE_CONFIG);
+    let fs;
+    // La caché en el aparato deja ver y anotar gastos sin internet.
+    try {
+      fs = F.initializeFirestore(app, {
+        ignoreUndefinedProperties: true,
+        localCache: F.persistentLocalCache({ tabManager: F.persistentMultipleTabManager() })
+      });
+    } catch (e) { fs = F.getFirestore(app); }
+    const auth = A.getAuth(app);
+    auth.languageCode = "es";
+    fb = { A, F, fs, auth };
+    A.onAuthStateChanged(auth, (u) => {
+      detener();
+      usuario = u;
+      if (u) { ir("agregar"); escuchar(); }
+      else { $("#entrarMsg").textContent = ""; $("#btnEntrar").hidden = false; ir("entrar"); }
+    });
+  } catch (e) {
+    console.error(e);
+    $("#entrarMsg").textContent = "No se pudo cargar. Revisa tu internet y vuelve a abrir la app.";
+  }
+}
+async function entrar() {
+  try { await fb.A.signInWithPopup(fb.auth, new fb.A.GoogleAuthProvider()); }
+  catch (e) { if (!/popup-closed|cancelled-popup/.test(e.code || "")) toast("No se pudo entrar: " + (e.code || e.message)); }
+}
+function detener() {
+  escuchas.forEach((fn) => { try { fn(); } catch (e) {} });
+  escuchas = [];
+  buzonActual = null;
+  enProceso.clear();
+  avisosEnEspera = null;
+  data = { movs: [], aprendido: {}, presupuesto: 0 };
+  perfil = {};
+  cargado = false;
+}
+function escuchar() {
+  const { F, fs } = fb;
+  escuchas.push(F.onSnapshot(docPerfil(), (s) => {
+    perfil = s.data() || {};
+    data.presupuesto = +perfil.presupuesto || 0;
+    data.aprendido = perfil.aprendido || {};
+    // Un aparato nuevo primero ve su caché vacía; solo se crea el código si el servidor confirma que no hay.
+    if (perfil.codigo) escucharBuzon(perfil.codigo);
+    else if (!s.metadata.fromCache) crearCodigo();
+    refrescar();
+  }, falloNube));
+  escuchas.push(F.onSnapshot(F.collection(fs, "usuarios", usuario.uid, "movs"), (s) => {
+    data.movs = s.docs.map((d) => ({ ...d.data(), id: d.id }));
+    cargado = true;
+    if (avisosEnEspera) procesarAvisos(avisosEnEspera);
+    refrescar();
+    revisarGmailSiToca();
+  }, falloNube));
+}
+
+// ---------- Buzón: avisos que mandan los celulares ----------
+let buzonActual = null, avisosEnEspera = null, creandoCodigo = false;
+const enProceso = new Set();
+function codigoAzar() {
+  const letras = "abcdefghijkmnpqrstuvwxyz23456789";
+  return Array.from(crypto.getRandomValues(new Uint8Array(24)), (b) => letras[b % letras.length]).join("");
+}
+async function crearCodigo(anterior) {
+  if (creandoCodigo) return;
+  creandoCodigo = true;
+  const { F, fs } = fb;
+  try {
+    const codigo = codigoAzar();
+    await F.setDoc(F.doc(fs, "buzon", codigo), { uid: usuario.uid });
+    await F.setDoc(docPerfil(), { codigo }, { merge: true });
+    if (anterior) await F.deleteDoc(F.doc(fs, "buzon", anterior)).catch(() => {});
+    if (anterior) toast("Dirección cambiada. Actualízala en MacroDroid o Atajos.");
+  } catch (e) { falloNube(e); }
+  finally { creandoCodigo = false; }
+}
+function escucharBuzon(codigo) {
+  if (buzonActual === codigo) return;
+  buzonActual = codigo;
+  const { F, fs } = fb;
+  escuchas.push(F.onSnapshot(F.collection(fs, "buzon", codigo, "avisos"), (s) => procesarAvisos(s.docs), falloNube));
+}
+// Convierte cada aviso en un movimiento y lo saca del buzón, en un solo paso.
+// El movimiento se llama como el aviso, así dos aparatos abiertos no lo duplican.
+function procesarAvisos(docs) {
+  if (!cargado) { avisosEnEspera = docs; return; }
+  avisosEnEspera = null;
+  const { F, fs } = fb;
+  const nuevos = [], vistos = [];
+  let fallidos = 0;
+  for (const d of docs) {
+    if (enProceso.has(d.id)) continue;
+    enProceso.add(d.id);
+    vistos.push(d.ref);
+    const a = d.data();
+    const m = leerAviso(String(a.texto || ""));
+    if (!m) { fallidos++; continue; }
+    m.id = "av-" + d.id;
+    if (data.movs.some((x) => x.id === m.id) || esDuplicado(m)) continue;
+    Object.assign(m, { creado: Date.now(), fuente: String(a.fuente || "celular").slice(0, 20) });
+    data.movs.push(m);
+    nuevos.push(m);
+  }
+  if (!vistos.length) return;
+  const b = F.writeBatch(fs);
+  nuevos.forEach((m) => b.set(docMov(m.id), m));
+  vistos.forEach((ref) => b.delete(ref));
+  b.commit().catch(falloNube);
+  if (nuevos.length) toast(nuevos.length === 1 ? "Llegó 1 movimiento nuevo" : "Llegaron " + nuevos.length + " movimientos nuevos");
+  else if (fallidos) toast(fallidos === 1 ? "Llegó un aviso sin monto; no se guardó" : "Llegaron " + fallidos + " avisos sin monto; no se guardaron");
+  refrescar();
+}
+function urlBuzon() {
+  if (!perfil.codigo) return "";
+  return "https://firestore.googleapis.com/v1/projects/" + FIREBASE_CONFIG.projectId +
+    "/databases/(default)/documents/buzon/" + perfil.codigo + "/avisos?key=" + FIREBASE_CONFIG.apiKey;
+}
+// Cuerpo para MacroDroid: los [corchetes] son "texto mágico" que MacroDroid reemplaza al mandar.
+const CUERPO_ANDROID = '{"fields":{"texto":{"stringValue":"[not_title] [notification] [dayofmonth]/[month_digit]/[year] [hour]:[minute]"},"fuente":{"stringValue":"android"}}}';
+async function mandarPrueba() {
+  const url = urlBuzon();
+  if (!url) return;
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fields: { texto: { stringValue: "Aviso de prueba: Yapeaste S/ 1.00 a Prueba de Mis gastos" }, fuente: { stringValue: "prueba" } } })
+    });
+    toast(r.ok ? "Aviso enviado. Aparecerá en Movimientos en unos segundos." : "Firebase no aceptó el aviso (error " + r.status + "). Revisa las reglas.");
+  } catch (e) { toast("No se pudo mandar. Revisa tu internet."); }
+}
+async function copiar(texto, aviso) {
+  try { await navigator.clipboard.writeText(texto); toast(aviso); }
+  catch (e) { prompt("Copia este texto:", texto); }
+}
+
+// ---------- Gmail: correos del banco ----------
+// Google da un permiso que dura una hora; se guarda solo mientras la app está abierta.
+function tokenGmail() {
+  try {
+    const t = JSON.parse(sessionStorage.getItem("gastos.gmail"));
+    if (t && t.vence > Date.now()) return t.token;
+  } catch (e) {}
+  return "";
+}
+async function conectarGmail() {
+  const { A } = fb;
+  const p = new A.GoogleAuthProvider();
+  p.addScope(GMAIL_PERMISO);
+  p.setCustomParameters({ login_hint: usuario.email || "" });
+  try {
+    const r = await A.reauthenticateWithPopup(usuario, p);
+    const cred = A.GoogleAuthProvider.credentialFromResult(r);
+    if (!cred || !cred.accessToken) throw new Error("sin permiso");
+    try { sessionStorage.setItem("gastos.gmail", JSON.stringify({ token: cred.accessToken, vence: Date.now() + 50 * 60 * 1000 })); } catch (e) {}
+    if (!perfil.gmail) { perfil.gmail = true; fb.F.setDoc(docPerfil(), { gmail: true }, { merge: true }).catch(falloNube); }
+    await revisarGmail();
+  } catch (e) {
+    if (/popup-closed|cancelled-popup/.test(e.code || "")) return;
+    toast(e.code === "auth/user-mismatch" ? "Elige la misma cuenta con la que entraste" : "No se pudo conectar Gmail");
+  }
+}
+function quitarGmail() {
+  try { sessionStorage.removeItem("gastos.gmail"); } catch (e) {}
+  perfil.gmail = false;
+  fb.F.setDoc(docPerfil(), { gmail: false }, { merge: true }).catch(falloNube);
+  refrescar();
+  toast("Gmail desconectado. Para quitar el permiso del todo, entra a myaccount.google.com/permissions");
+}
+let revisandoGmail = false, ultimaRevision = 0;
+function revisarGmailSiToca() {
+  if (FB && perfil.gmail && tokenGmail() && Date.now() - ultimaRevision > 5 * 60 * 1000) revisarGmail();
+}
+async function revisarGmail(aMano) {
+  const token = tokenGmail();
+  if (!token) { if (aMano) conectarGmail(); return; }
+  if (revisandoGmail || !cargado) return;
+  revisandoGmail = true;
+  ultimaRevision = Date.now();
+  try {
+    // Desde la última revisión (con una hora de margen); la primera vez, los últimos 3 días.
+    const desde = +perfil.gmailDesde || Date.now() - 3 * 864e5;
+    const q = GMAIL_BUSQUEDA + " after:" + Math.floor((desde - 3600 * 1000) / 1000);
+    const lista = await gmail("messages?maxResults=50&q=" + encodeURIComponent(q), token);
+    const nuevos = [];
+    for (const { id } of lista.messages || []) {
+      if (data.movs.some((x) => x.id === "gm-" + id)) continue;
+      const msj = await gmail("messages/" + id + "?format=full", token);
+      const t = textoCorreo(msj);
+      if (!/(S\/|US\$)\s*\d/.test(t)) continue;
+      const llegada = new Date(+msj.internalDate);
+      const m = leerAviso(t, iso(llegada) + " " + String(llegada.getHours()).padStart(2, "0") + ":" + String(llegada.getMinutes()).padStart(2, "0"));
+      if (!m || esDuplicado(m)) continue;
+      Object.assign(m, { id: "gm-" + id, creado: Date.now(), fuente: "correo" });
+      data.movs.push(m);
+      nuevos.push(m);
+    }
+    perfil.gmailDesde = Date.now();
+    fb.F.setDoc(docPerfil(), { gmailDesde: perfil.gmailDesde }, { merge: true }).catch(falloNube);
+    if (nuevos.length) {
+      guardar({ movs: nuevos });
+      toast(nuevos.length === 1 ? "Llegó 1 gasto de tus correos" : "Llegaron " + nuevos.length + " gastos de tus correos");
+    } else if (aMano) toast("No hay correos nuevos del banco");
+  } catch (e) {
+    if (e.status === 401) { try { sessionStorage.removeItem("gastos.gmail"); } catch (x) {} }
+    else if (e.status === 403) toast("Google no dio permiso para leer Gmail. Conéctalo otra vez y marca la casilla de Gmail.");
+    else toast("No se pudo revisar Gmail");
+  } finally {
+    revisandoGmail = false;
+    refrescar();
+  }
+}
+async function gmail(ruta, token) {
+  const r = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/" + ruta, { headers: { Authorization: "Bearer " + token } });
+  if (!r.ok) { const e = new Error("Gmail " + r.status); e.status = r.status; throw e; }
+  return r.json();
+}
+// Asunto + cuerpo del correo como texto simple (si solo hay HTML, se le quitan las etiquetas).
+function textoCorreo(msj) {
+  const asunto = ((msj.payload && msj.payload.headers) || []).find((h) => /^subject$/i.test(h.name));
+  let plano = "", html = "";
+  (function recorrer(p) {
+    if (!p) return;
+    const d = p.body && p.body.data;
+    if (d && p.mimeType === "text/plain") plano += base64(d) + "\n";
+    else if (d && p.mimeType === "text/html") html += base64(d);
+    (p.parts || []).forEach(recorrer);
+  })(msj.payload);
+  if (!plano && html) {
+    // DOMParser no ejecuta scripts ni carga imágenes del correo.
+    plano = new DOMParser().parseFromString(html.replace(/<(br|\/p|\/div|\/tr|\/td|\/li|\/h\d)[^>]*>/gi, "$&\n"), "text/html").body.textContent;
+  }
+  return ((asunto ? asunto.value + "\n" : "") + plano)
+    .replace(/[ \t ]+/g, " ").replace(/\n\s*\n+/g, "\n").trim().slice(0, 3000);
+}
+function base64(s) {
+  const bin = atob(s.replace(/-/g, "+").replace(/_/g, "/"));
+  return new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0)));
+}
+function pintarCuenta() {
+  const dentro = FB && !!usuario;
+  ["#cuenta", "#celular", "#correo"].forEach((s) => { $(s).hidden = !dentro; });
+  $("#gmailAviso").hidden = !(dentro && perfil.gmail && !tokenGmail());
+  if (!dentro) return;
+  $("#cuentaCorreo").textContent = "Entraste como " + (usuario.email || usuario.displayName || "");
+  $("#buzonUrl").value = urlBuzon() || "Creando tu dirección…";
+  const con = !!perfil.gmail;
+  $("#btnGmail").hidden = con;
+  $("#btnGmailRevisar").hidden = !con;
+  $("#btnGmailQuitar").hidden = !con;
+  const ultima = +perfil.gmailDesde ? new Date(+perfil.gmailDesde) : null;
+  $("#gmailEstado").textContent = !con
+    ? "Si tu banco te manda un correo por cada compra, la app puede leerlos y anotarlos sola. Google te pedirá permiso para leer tu Gmail."
+    : "Conectado. Se revisa al abrir la app" + (ultima ? "; última revisión: " + ultima.toLocaleString("es-PE", { dateStyle: "short", timeStyle: "short" }) : "") + ".";
+}
+function nuevoId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+// ---------- Utilidades ----------
+const $ = (s) => document.querySelector(s);
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function dinero(n, moneda = "PEN") {
+  const t = (+n || 0).toLocaleString("es-PE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return (moneda === "USD" ? "US$ " : "S/ ") + t;
+}
+function iso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function hoy() { return iso(new Date()); }
+function mesDe(f) { return f.slice(0, 7); }
+function mesActual() { return hoy().slice(0, 7); }
+function mesAnterior(m) { const [y, mm] = m.split("-").map(Number); return iso(new Date(y, mm - 2, 1)).slice(0, 7); }
+function nombreMes(m) {
+  const [y, mm] = m.split("-").map(Number);
+  return new Date(y, mm - 1, 1).toLocaleDateString("es-PE", { month: "long", year: "numeric" });
+}
+function nombreDia(f) {
+  const [y, m, d] = f.split("-").map(Number);
+  const t = new Date(y, m - 1, d).toLocaleDateString("es-PE", { weekday: "long", day: "numeric", month: "long" });
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+function norm(s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ").trim(); }
+function toast(t) {
+  const el = $("#toast");
+  el.textContent = t; el.classList.add("ver");
+  clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("ver"), 2600);
+}
+function descargar(nombre, texto, tipo) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([texto], { type: tipo }));
+  a.download = nombre;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// ---------- Lectura de avisos ----------
+const RE_MONTO = /(S\/\.?|PEN|US\$|USD|\$)\s*(\d[\d.,]*\d|\d)/i;
+const MESES = { ene: 1, feb: 2, mar: 3, abr: 4, may: 5, jun: 6, jul: 7, ago: 8, set: 9, sep: 9, oct: 10, nov: 11, dic: 12 };
+
+// Convierte "1,234.50", "25,50" o "25.00" a número.
+function numero(s) {
+  s = s.replace(/\s/g, "");
+  const c = s.lastIndexOf(","), p = s.lastIndexOf(".");
+  if (c > -1 && p > -1) s = c > p ? s.replace(/\./g, "").replace(",", ".") : s.replace(/,/g, "");
+  else if (c > -1) s = /,\d{1,2}$/.test(s) ? s.replace(",", ".") : s.replace(/,/g, "");
+  else if ((s.match(/\./g) || []).length > 1) s = s.replace(/\./g, "");
+  return parseFloat(s);
+}
+function fechaValida(y, m, d) {
+  const f = new Date(y, m - 1, d);
+  if (f.getMonth() !== m - 1 || f.getDate() !== d) return null;
+  return iso(f);
+}
+function leerFecha(t) {
+  let m = t.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
+  if (m) return fechaValida(+m[1], +m[2], +m[3]);
+  m = t.match(/\b(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})\b/);
+  if (m) { let y = +m[3]; if (y < 100) y += 2000; return fechaValida(y, +m[2], +m[1]); }
+  const re = /\b(\d{1,2})\s+(?:de\s+)?([a-záéíóú]{3,})\.?(?:\s+(?:de\s+|del\s+)?(\d{4}))?/gi;
+  while ((m = re.exec(t))) {
+    const mes = MESES[norm(m[2]).slice(0, 3)];
+    if (!mes) continue;
+    let y = m[3] ? +m[3] : new Date().getFullYear();
+    let f = fechaValida(y, mes, +m[1]);
+    // Sin año y en el futuro: es del año pasado.
+    if (f && !m[3] && f > hoy()) f = fechaValida(y - 1, mes, +m[1]);
+    if (f) return f;
+  }
+  return null;
+}
+function leerHora(t) {
+  const m = t.match(/\b(\d{1,2}):(\d{2})(?::\d{2})?\s*(a\.?\s?m\.?|p\.?\s?m\.?)?/i);
+  if (!m) return "";
+  let h = +m[1];
+  const ap = (m[3] || "").toLowerCase();
+  if (ap.startsWith("p") && h < 12) h += 12;
+  if (ap.startsWith("a") && h === 12) h = 0;
+  if (h > 23 || +m[2] > 59) return "";
+  return String(h).padStart(2, "0") + ":" + m[2];
+}
+function limpiarDestino(s) {
+  s = String(s || "").split(/\s+(?:el|con|por|desde|hoy|ayer|a las|nro|n°|n\.°|operaci[oó]n|desde)\b|[,;|]|\.\s|\s\d{1,2}[\/:]/i)[0];
+  s = s.replace(/[.!:¡¿?"'*]+$/g, "").replace(/^[\s:*-]+/, "").replace(/\s+/g, " ").trim();
+  if (/^(las|los|tu|su|la|el)\b/i.test(s)) return "";
+  return s.slice(0, 50);
+}
+function leerDestino(t, antes, despues, tipo) {
+  let m = t.match(/(?:^|\n)\s*(?:enviado a|destino|destinatario|beneficiario|nombre del comercio|comercio|establecimiento|empresa)\s*:?\s*([^\n]+)/i);
+  if (m && /[a-záéíóúñ]{2}/i.test(limpiarDestino(m[1]))) return limpiarDestino(m[1]);
+  m = antes.match(/([^\n!¡.]{2,40}?)\s+te\s+(?:yape|pline|envi|deposit|transfiri)/i);
+  if (m) return limpiarDestino(m[1]);
+  // En un gasto, "de" suele ser parte de "Tarjeta de Débito"; solo en ingresos indica quién envió.
+  const re = tipo === "ingreso" ? /\s(?:de|desde)\s+([^\n]{2,80})/i : /\s(?:a|en|para)\s+([^\n]{2,80})/i;
+  m = despues.slice(0, 160).match(re);
+  if (m) return limpiarDestino(m[1]);
+  // Constancia leída de una captura: el nombre va en una de las líneas siguientes al monto.
+  const linea = despues.split("\n").slice(1, 4).map((l) => l.trim())
+    .find((l) => /[a-záéíóúñ]{2}/i.test(l) && !/\d/.test(l) && !/yape|plin|constancia|operaci|destino|compart|celular|mensaje/i.test(l));
+  return linea ? limpiarDestino(linea) : "";
+}
+function leerMedio(t) {
+  if (/yape/i.test(t)) return "Yape";
+  if (/plin/i.test(t)) return "Plin";
+  const tarjeta = /tarjeta|visa|mastercard|amex|consumo|compra|\bpos\b/i.test(t);
+  if (tarjeta && /cr[eé]dito/i.test(t)) return "Tarjeta crédito";
+  if (tarjeta || /d[eé]bito/i.test(t)) return "Tarjeta débito";
+  if (/transferencia/i.test(t)) return "Transferencia";
+  return "Otro";
+}
+function sugerirCategoria(destino, texto, tipo) {
+  if (tipo === "ingreso") return "Ingreso";
+  const aprendida = data.aprendido[norm(destino)];
+  if (aprendida) return aprendida;
+  for (const [re, cat] of REGLAS) if (re.test(destino) || re.test(texto)) return cat;
+  return "Otros";
+}
+// recibido ("2026-10-30 19:45") es cuándo llegó el aviso; se usa si el texto no trae fecha u hora.
+function leerAviso(t, recibido = "") {
+  const m = t.match(RE_MONTO) || t.match(/monto[^\d\n]{0,15}(\d[\d.,]*)/i);
+  if (!m) return null;
+  const tieneMoneda = m.length > 2 && m[2] !== undefined;
+  const monto = numero(tieneMoneda ? m[2] : m[1]);
+  if (!(monto > 0)) return null;
+  const moneda = tieneMoneda && /US|\$/i.test(m[1]) && !/S\//i.test(m[1]) ? "USD" : "PEN";
+  const antes = t.slice(0, m.index), despues = t.slice(m.index + m[0].length);
+  const tipo = /te yape|te pline|recibiste|te (?:envi|deposit|transfiri)|abono en|ingreso de|dep[oó]sito recibido/i.test(t) ? "ingreso" : "gasto";
+  const destino = leerDestino(t, antes, despues, tipo);
+  return {
+    tipo, monto: Math.round(monto * 100) / 100, moneda,
+    fecha: leerFecha(t) || recibido.slice(0, 10) || hoy(), hora: leerHora(t) || recibido.slice(11, 16),
+    destino, medio: leerMedio(t),
+    categoria: sugerirCategoria(destino, t, tipo),
+    nota: "", origen: t.trim().slice(0, 500)
+  };
+}
+// Separa el texto pegado en avisos: por líneas en blanco, o por línea si cada una trae un monto.
+function separarAvisos(txt) {
+  const partes = [];
+  for (const p of txt.replace(/\r/g, "").split(/\n\s*\n/)) {
+    if (!p.trim()) continue;
+    const lineas = p.split("\n").filter((l) => l.trim());
+    if (lineas.length > 1 && lineas.every((l) => RE_MONTO.test(l))) { partes.push(...lineas); continue; }
+    if (partes.length && !RE_MONTO.test(p) && RE_MONTO.test(partes[partes.length - 1])) partes[partes.length - 1] += "\n" + p;
+    else partes.push(p);
+  }
+  return partes;
+}
+function esDuplicado(m) {
+  return data.movs.some((x) => x.monto === m.monto && x.fecha === m.fecha && x.tipo === m.tipo &&
+    norm(x.destino) === norm(m.destino) && (!x.hora || !m.hora || x.hora === m.hora));
+}
+
+// ---------- Campos del formulario ----------
+function campos(m, p) {
+  const opc = (lista, v) => lista.map((x) => `<option${x === v ? " selected" : ""}>${esc(x)}</option>`).join("");
+  return `<div class="grid">
+    <label>Tipo<select data-c="tipo" id="${p}tipo">
+      <option value="gasto"${m.tipo === "gasto" ? " selected" : ""}>Gasto</option>
+      <option value="ingreso"${m.tipo === "ingreso" ? " selected" : ""}>Ingreso</option></select></label>
+    <label>Monto<input data-c="monto" id="${p}monto" type="number" step="0.01" min="0" inputmode="decimal" value="${m.monto || ""}"></label>
+    <label>Moneda<select data-c="moneda" id="${p}moneda">
+      <option value="PEN"${m.moneda !== "USD" ? " selected" : ""}>Soles (S/)</option>
+      <option value="USD"${m.moneda === "USD" ? " selected" : ""}>Dólares (US$)</option></select></label>
+    <label>Fecha<input data-c="fecha" id="${p}fecha" type="date" value="${esc(m.fecha)}"></label>
+    <label>Hora<input data-c="hora" id="${p}hora" type="time" value="${esc(m.hora)}"></label>
+    <label>A quién / dónde<input data-c="destino" id="${p}destino" value="${esc(m.destino)}" placeholder="Ej.: Plaza Vea"></label>
+    <label>Categoría<select data-c="categoria" id="${p}categoria">${opc(CATS, m.categoria)}</select></label>
+    <label>Medio<select data-c="medio" id="${p}medio">${opc(MEDIOS, m.medio)}</select></label>
+  </div>
+  <label style="margin-top:8px">Nota<input data-c="nota" id="${p}nota" value="${esc(m.nota)}" placeholder="Opcional"></label>`;
+}
+function leerCampos(raiz, base) {
+  const m = { ...base };
+  raiz.querySelectorAll("[data-c]").forEach((el) => { m[el.dataset.c] = el.value; });
+  m.monto = Math.round(parseFloat(m.monto) * 100) / 100;
+  m.destino = m.destino.trim(); m.nota = m.nota.trim();
+  return m;
+}
+function validar(m) {
+  if (!(m.monto > 0)) { toast("Escribe un monto mayor que 0"); return false; }
+  if (!m.fecha) { toast("Elige la fecha"); return false; }
+  return true;
+}
+function aprender(m) { if (m.destino && m.tipo === "gasto") data.aprendido[norm(m.destino)] = m.categoria; }
+
+// ---------- Vista Agregar ----------
+function vacioManual() {
+  return { tipo: "gasto", monto: "", moneda: "PEN", fecha: hoy(), hora: "", destino: "", categoria: "Otros", medio: "Yape", nota: "" };
+}
+function pintarManual() { $("#manual").innerHTML = campos(vacioManual(), "man-"); }
+function leerPegado() {
+  const txt = $("#pegar").value;
+  if (!txt.trim()) { toast("Primero pega uno o más avisos"); return; }
+  previa = separarAvisos(txt).map((t) => leerAviso(t)).filter(Boolean)
+    .map((m) => ({ ...m, dup: esDuplicado(m) }));
+  if (!previa.length) { toast("No encontré montos. Revisa que el texto diga S/ y el monto."); }
+  pintarPrevia();
+}
+function pintarPrevia() {
+  if (!previa.length) { $("#previa").innerHTML = ""; return; }
+  $("#previa").innerHTML = `<div class="card"><h2>Revisa antes de guardar (${previa.length})</h2>
+    <p class="muted">Corrige lo que haga falta. Solo se guardan los marcados.</p></div>` +
+    previa.map((m, i) => `<div class="card prev${m.dup ? " dup" : ""}" data-i="${i}">
+      ${m.dup ? '<div class="aviso">Parece repetido: ya tienes un movimiento igual.</div>' : ""}
+      <label class="chk"><input type="checkbox" class="usar"${m.dup ? "" : " checked"}> Guardar este</label>
+      <div class="orig">${esc(m.origen)}</div>
+      ${campos(m, "p" + i + "-")}
+    </div>`).join("") +
+    `<div class="row" style="margin:-4px 0 14px"><button class="b pri" id="btnGuardarPrevia">Guardar marcados</button>
+     <button class="b" id="btnDescartar">Descartar</button></div>`;
+  $("#btnGuardarPrevia").onclick = guardarPrevia;
+  $("#btnDescartar").onclick = () => { previa = []; pintarPrevia(); };
+}
+function guardarPrevia() {
+  const nuevos = [];
+  for (const card of document.querySelectorAll("#previa .prev")) {
+    if (!card.querySelector(".usar").checked) continue;
+    const base = previa[+card.dataset.i];
+    const m = leerCampos(card, { origen: base.origen });
+    if (!validar(m)) return;
+    nuevos.push(m);
+  }
+  if (!nuevos.length) { toast("No marcaste ninguno"); return; }
+  for (const m of nuevos) { m.id = nuevoId(); m.creado = Date.now(); aprender(m); data.movs.push(m); }
+  if (!guardar({ movs: nuevos, ajustes: true })) return;
+  previa = []; $("#pegar").value = ""; pintarPrevia();
+  toast(nuevos.length === 1 ? "Movimiento guardado" : nuevos.length + " movimientos guardados");
+}
+function guardarManual() {
+  const m = leerCampos($("#manual"), {});
+  if (!validar(m)) return;
+  m.id = nuevoId(); m.creado = Date.now(); m.origen = "";
+  aprender(m); data.movs.push(m);
+  if (guardar({ movs: [m], ajustes: true })) { pintarManual(); toast("Movimiento guardado"); }
+}
+
+// ---------- Vista Movimientos ----------
+function pintarFiltros() {
+  $("#fMedio").innerHTML = `<option value="">Todos</option>` + MEDIOS.map((x) => `<option>${esc(x)}</option>`).join("");
+  $("#fCat").innerHTML = `<option value="">Todas</option>` + CATS.map((x) => `<option>${esc(x)}</option>`).join("");
+}
+function ordenar(a, b) { return (b.fecha + (b.hora || "")).localeCompare(a.fecha + (a.hora || "")) || (b.creado || 0) - (a.creado || 0); }
+function pintarLista() {
+  const mes = $("#fMes").value, medio = $("#fMedio").value, cat = $("#fCat").value, q = norm($("#fTxt").value);
+  const movs = data.movs.filter((m) => (!mes || mesDe(m.fecha) === mes) && (!medio || m.medio === medio) &&
+    (!cat || m.categoria === cat) && (!q || norm(m.destino + " " + m.nota + " " + m.categoria).includes(q))).sort(ordenar);
+  if (!movs.length) {
+    $("#lista").innerHTML = `<div class="vacio">No hay movimientos${mes ? " en " + nombreMes(mes) : ""}.<br>Agrégalos en la pestaña «Agregar».</div>`;
+    return;
+  }
+  let html = "", dia = "";
+  for (const m of movs) {
+    if (m.fecha !== dia) {
+      dia = m.fecha;
+      const delDia = movs.filter((x) => x.fecha === dia && x.tipo === "gasto" && x.moneda !== "USD").reduce((s, x) => s + x.monto, 0);
+      html += `<div class="dia"><span>${esc(nombreDia(dia))}</span><span>${delDia ? "Gastado " + dinero(delDia) : ""}</span></div>`;
+    }
+    const ini = m.medio === "Tarjeta débito" ? "TD" : m.medio === "Tarjeta crédito" ? "TC" : m.medio.slice(0, 2).toUpperCase();
+    html += `<button class="mov" data-id="${esc(m.id)}">
+      <span class="ico" style="background:${COLOR_MEDIO[m.medio] || "#6b7280"}">${esc(ini)}</span>
+      <span class="info"><div class="dest">${esc(m.destino || "(sin nombre)")}</div>
+        <div class="det">${esc(m.categoria)} · ${esc(m.medio)}${m.hora ? " · " + esc(m.hora) : ""}${m.nota ? " · " + esc(m.nota) : ""}</div></span>
+      <span class="monto ${m.tipo === "ingreso" ? "i" : "g"}">${m.tipo === "ingreso" ? "+" : "−"}${dinero(m.monto, m.moneda)}</span>
+    </button>`;
+  }
+  $("#lista").innerHTML = html;
+}
+function abrirEdicion(id) {
+  editando = data.movs.find((m) => m.id === id);
+  if (!editando) return;
+  $("#dlgCampos").innerHTML = campos(editando, "e-") +
+    (editando.origen ? `<h3>Aviso original</h3><div class="muted" style="white-space:pre-wrap">${esc(editando.origen)}</div>` : "");
+  $("#dlg").showModal();
+}
+function guardarEdicion() {
+  const m = leerCampos($("#dlgCampos"), editando);
+  if (!validar(m)) return;
+  Object.assign(editando, m); aprender(editando);
+  if (guardar({ movs: [editando], ajustes: true })) { $("#dlg").close(); pintarLista(); toast("Cambios guardados"); }
+}
+function borrarEdicion() {
+  if (!confirm("¿Eliminar este movimiento?")) return;
+  data.movs = data.movs.filter((m) => m !== editando);
+  if (guardar({ borrar: [editando.id] })) { $("#dlg").close(); pintarLista(); toast("Movimiento eliminado"); }
+}
+
+// ---------- Vista Resumen ----------
+function barras(pares, total) {
+  const max = Math.max(...pares.map((p) => p[1]), 1);
+  return pares.map(([n, v]) => `<div class="hbar"><span class="nm" title="${esc(n)}">${esc(n)}</span>
+    <span class="tr"><span class="fi" style="display:block;width:${(v / max * 100).toFixed(1)}%"></span></span>
+    <span>${dinero(v)}${total ? ` <span class="muted">${Math.round(v / total * 100)}%</span>` : ""}</span></div>`).join("");
+}
+function agrupar(movs, clave) {
+  const r = {};
+  for (const m of movs) r[m[clave] || "(sin nombre)"] = (r[m[clave] || "(sin nombre)"] || 0) + m.monto;
+  return Object.entries(r).sort((a, b) => b[1] - a[1]);
+}
+function pintarResumen() {
+  const mes = $("#rMes").value || mesActual();
+  const delMes = data.movs.filter((m) => mesDe(m.fecha) === mes);
+  const soles = delMes.filter((m) => m.moneda !== "USD");
+  const gastos = soles.filter((m) => m.tipo === "gasto");
+  const gastado = gastos.reduce((s, m) => s + m.monto, 0);
+  const ingresos = soles.filter((m) => m.tipo === "ingreso").reduce((s, m) => s + m.monto, 0);
+  const usd = delMes.filter((m) => m.moneda === "USD" && m.tipo === "gasto").reduce((s, m) => s + m.monto, 0);
+  const antes = data.movs.filter((m) => mesDe(m.fecha) === mesAnterior(mes) && m.moneda !== "USD" && m.tipo === "gasto")
+    .reduce((s, m) => s + m.monto, 0);
+
+  const [y, mm] = mes.split("-").map(Number);
+  const diasMes = new Date(y, mm, 0).getDate();
+  const diasPasados = mes === mesActual() ? new Date().getDate() : mes < mesActual() ? diasMes : 0;
+  const promedio = diasPasados ? gastado / diasPasados : 0;
+
+  if (!delMes.length) {
+    $("#resumen").innerHTML = `<div class="vacio">No hay movimientos en ${esc(nombreMes(mes))}.</div>`;
+    return;
+  }
+  let comp = "Sin datos del mes anterior";
+  if (antes > 0) {
+    const d = (gastado - antes) / antes * 100;
+    comp = `${d >= 0 ? "▲" : "▼"} ${Math.abs(d).toFixed(0)}% que el mes anterior (${dinero(antes)})`;
+  }
+  let html = `<div class="kpis">
+    <div class="kpi"><div class="t">Gastado</div><div class="v g">${dinero(gastado)}</div><div class="s">${esc(comp)}</div></div>
+    <div class="kpi"><div class="t">Ingresos</div><div class="v i">${dinero(ingresos)}</div><div class="s">Balance: ${dinero(ingresos - gastado)}</div></div>
+    <div class="kpi"><div class="t">Promedio por día</div><div class="v">${dinero(promedio)}</div><div class="s">${gastos.length} gastos en ${diasPasados || 0} días</div></div>
+  </div>`;
+  if (usd) html += `<p class="muted" style="margin-top:8px">Además gastaste ${dinero(usd, "USD")} en dólares (no se suman a los soles).</p>`;
+
+  if (data.presupuesto > 0) {
+    const pct = gastado / data.presupuesto * 100;
+    const clase = pct > 100 ? "pasado" : pct > 80 ? "alto" : "";
+    const resta = data.presupuesto - gastado;
+    html += `<div class="card" style="margin-top:14px"><h2>Presupuesto del mes</h2>
+      <div class="meta"><div class="${clase}" style="width:${Math.min(pct, 100).toFixed(1)}%"></div></div>
+      <div class="muted">${pct.toFixed(0)}% de ${dinero(data.presupuesto)} ·
+      ${resta >= 0 ? "te quedan " + dinero(resta) : "te pasaste por " + dinero(-resta)}</div></div>`;
+  } else html += `<div style="height:14px"></div>`;
+
+  const porDia = Array(diasMes).fill(0);
+  for (const m of gastos) porDia[+m.fecha.slice(8) - 1] += m.monto;
+  const maxDia = Math.max(...porDia, 1);
+  html += `<div class="card"><h2>Gasto por día</h2>
+    <div class="dias">${porDia.map((v, i) => `<div class="${v ? "" : "cero"}" style="height:${v ? Math.max(v / maxDia * 100, 2) : 1}%" title="Día ${i + 1}: ${dinero(v)}"></div>`).join("")}</div>
+    <div class="ejes"><span>1</span><span>${Math.ceil(diasMes / 2)}</span><span>${diasMes}</span></div></div>`;
+  if (gastos.length) {
+    html += `<div class="card"><h2>Por categoría</h2>${barras(agrupar(gastos, "categoria"), gastado)}</div>`;
+    html += `<div class="card"><h2>Por medio de pago</h2>${barras(agrupar(gastos, "medio"), gastado)}</div>`;
+    html += `<div class="card"><h2>A quién más le pagaste</h2>${barras(agrupar(gastos, "destino").slice(0, 8), gastado)}</div>`;
+  }
+  $("#resumen").innerHTML = html;
+}
+
+// ---------- Ajustes ----------
+function exportarCsv() {
+  const q = (s) => '"' + String(s ?? "").replace(/"/g, '""') + '"';
+  const filas = [["Fecha", "Hora", "Tipo", "Monto", "Moneda", "A quién", "Categoría", "Medio", "Nota"]];
+  for (const m of [...data.movs].sort(ordenar).reverse())
+    filas.push([m.fecha, m.hora, m.tipo, String(m.monto).replace(".", ","), m.moneda, m.destino, m.categoria, m.medio, m.nota]);
+  descargar("gastos-" + hoy() + ".csv", "﻿" + filas.map((f) => f.map(q).join(";")).join("\r\n"), "text/csv");
+}
+function importar(archivo) {
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result);
+      if (!d || !Array.isArray(d.movs)) throw new Error();
+      const ids = new Set(data.movs.map((m) => m.id));
+      const nuevos = d.movs.filter((m) => m && m.id && !ids.has(m.id) && m.monto > 0 && m.fecha);
+      data.movs.push(...nuevos);
+      data.aprendido = { ...(d.aprendido || {}), ...data.aprendido };
+      if (!data.presupuesto && d.presupuesto) data.presupuesto = +d.presupuesto;
+      if (guardar({ movs: nuevos, ajustes: true })) { toast(nuevos.length + " movimientos cargados"); refrescar(); }
+    } catch (e) { toast("Ese archivo no es una copia válida"); }
+  };
+  r.readAsText(archivo);
+}
+
+// ---------- Navegación ----------
+let vista = "agregar";
+function ir(v) {
+  vista = v;
+  $("#tabs").hidden = v === "entrar";
+  document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.v === v));
+  document.querySelectorAll("main > section").forEach((s) => { s.hidden = s.id !== "v-" + v; });
+  refrescar();
+  window.scrollTo(0, 0);
+}
+function refrescar() {
+  if (vista === "movs") pintarLista();
+  if (vista === "resumen") pintarResumen();
+  // No pisar el presupuesto mientras la persona lo escribe.
+  if (vista === "ajustes" && document.activeElement !== $("#presupuesto")) $("#presupuesto").value = data.presupuesto || 0;
+  if (FB) pintarCuenta();
+}
+
+document.querySelectorAll("#tabs button").forEach((b) => { b.onclick = () => ir(b.dataset.v); });
+$("#btnLeer").onclick = leerPegado;
+$("#btnPortapapeles").onclick = async () => {
+  try { $("#pegar").value = await navigator.clipboard.readText(); leerPegado(); }
+  catch (e) { toast("No se pudo leer el portapapeles. Mantén presionado el cuadro y elige Pegar."); }
+};
+$("#btnManual").onclick = guardarManual;
+["#fMes", "#fMedio", "#fCat", "#fTxt"].forEach((s) => { $(s).oninput = pintarLista; });
+$("#rMes").oninput = pintarResumen;
+$("#lista").onclick = (e) => { const b = e.target.closest(".mov"); if (b) abrirEdicion(b.dataset.id); };
+$("#dlgGuardar").onclick = guardarEdicion;
+$("#dlgCerrar").onclick = () => $("#dlg").close();
+$("#dlgBorrar").onclick = borrarEdicion;
+$("#btnPresu").onclick = () => {
+  const v = parseFloat($("#presupuesto").value);
+  data.presupuesto = v > 0 ? Math.round(v * 100) / 100 : 0;
+  if (guardar({ ajustes: true })) toast("Presupuesto guardado");
+};
+$("#btnExportar").onclick = () => descargar("gastos-copia-" + hoy() + ".json", JSON.stringify(data, null, 1), "application/json");
+$("#btnImportar").onclick = () => $("#archivo").click();
+$("#archivo").onchange = (e) => { if (e.target.files[0]) importar(e.target.files[0]); e.target.value = ""; };
+$("#btnCsv").onclick = () => { if (!data.movs.length) toast("Aún no hay movimientos"); else exportarCsv(); };
+$("#btnBorrarTodo").onclick = () => {
+  if (!data.movs.length) { toast("No hay nada que borrar"); return; }
+  if (!confirm("¿Borrar los " + data.movs.length + " movimientos? Descarga una copia antes si la quieres guardar.")) return;
+  const ids = data.movs.map((m) => m.id);
+  data.movs = [];
+  if (guardar({ borrar: ids })) toast("Movimientos borrados");
+};
+$("#btnEntrar").onclick = entrar;
+$("#btnSalir").onclick = () => {
+  if (!confirm("¿Salir de tu cuenta en este aparato? Tus gastos siguen guardados.")) return;
+  try { sessionStorage.removeItem("gastos.gmail"); } catch (e) {}
+  fb.A.signOut(fb.auth);
+};
+$("#btnCopiarUrl").onclick = () => { if (urlBuzon()) copiar(urlBuzon(), "Dirección copiada"); };
+$("#btnCopiarCuerpo").onclick = () => copiar(CUERPO_ANDROID, "Cuerpo copiado");
+$("#btnProbar").onclick = mandarPrueba;
+$("#btnNuevoCodigo").onclick = () => {
+  if (confirm("¿Cambiar la dirección? La anterior dejará de funcionar y tendrás que poner la nueva en MacroDroid o Atajos.")) crearCodigo(perfil.codigo);
+};
+$("#btnGmail").onclick = conectarGmail;
+$("#btnGmailRevisar").onclick = () => revisarGmail(true);
+$("#btnGmailAviso").onclick = () => revisarGmail(true);
+$("#btnGmailQuitar").onclick = quitarGmail;
+
+pintarManual();
+pintarFiltros();
+$("#fMes").value = mesActual();
+$("#rMes").value = mesActual();
+$("#avisoLocal").hidden = FB;
+if (FB) {
+  $("#borrarTexto").textContent = "Elimina todos tus movimientos guardados. No se puede deshacer.";
+  iniciarFirebase();
+  // Al volver a la app, revisa los correos si el permiso de Gmail sigue vigente.
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) revisarGmailSiToca(); });
+} else ir("agregar");
+</script>
+</body>
+</html>
