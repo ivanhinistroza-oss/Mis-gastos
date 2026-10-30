@@ -37,8 +37,9 @@ label { display: block; font-size: 12px; color: var(--muted); }
 label > input, label > select { margin-top: 2px; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
-button.b { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--txt); cursor: pointer; }
-button.pri { background: var(--pri); color: var(--pri-txt); border-color: var(--pri); }
+button.b, a.b { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--txt); cursor: pointer; }
+a.b { display: inline-block; }
+.b.pri { background: var(--pri); color: var(--pri-txt); border-color: var(--pri); }
 button.peligro { color: var(--gasto); }
 .prev { border-left: 4px solid var(--pri); }
 .prev.dup { border-left-color: var(--warn); }
@@ -148,7 +149,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
     </div>
     <div class="card" id="celular" hidden>
       <h2>Avisos desde el celular</h2>
-      <p class="muted">MacroDroid (Android) o Atajos (iPhone) mandan aquí los avisos de Yape y del banco. Usa esta dirección al configurarlos; la guía explica cada paso. No la compartas: con ella cualquiera podría mandarte avisos.</p>
+      <p class="muted">En Android, la app «Mis gastos avisos» lee las notificaciones de Yape y de tus bancos y las manda aquí. En iPhone se usa Atajos. Las dos necesitan esta dirección; la guía explica cada paso. No la compartas: con ella cualquiera podría mandarte avisos.</p>
+      <div class="row" style="margin-top:0;margin-bottom:10px"><a class="b pri" href="mis-gastos-avisos.apk" download style="text-decoration:none">Descargar app para Android</a></div>
       <label>Dirección (URL)<input id="buzonUrl" readonly></label>
       <div class="row">
         <button class="b" id="btnCopiarUrl">Copiar dirección</button>

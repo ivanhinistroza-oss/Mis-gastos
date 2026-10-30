@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+// La firma está en firma.properties (fuera de GitHub). Sin ella se arma solo la versión de prueba.
+def firma = new Properties()
+def archivoFirma = rootProject.file('firma.properties')
+if (archivoFirma.exists()) archivoFirma.withInputStream { firma.load(it) }
+
+android {
+    namespace 'pe.misgastos.avisos'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'pe.misgastos.avisos'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+
+    signingConfigs {
+        if (archivoFirma.exists()) {
+            release {
+                storeFile file(firma['archivo'])
+                storePassword firma['clave']
+                keyAlias firma['alias']
+                keyPassword firma['clave']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (archivoFirma.exists()) signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

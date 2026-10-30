@@ -53,7 +53,27 @@ En Firebase (proyecto **mis gastos**): **Seguridad → Authentication → Métod
 3. **Correos del banco (opcional):** **Ajustes → Conectar Gmail**. Acepta el aviso de Google: toca **Configuración avanzada → Ir a Mis gastos** y marca la casilla de Gmail. Desde ahí, cada vez que abras la app se traen los gastos que llegaron por correo.
    - El permiso de Google dura una hora. Si pasa más tiempo, en **Agregar** aparece el botón **Revisar correos**: tócalo y listo.
 
-### Android: Yape automático con MacroDroid
+### Android: app «Mis gastos avisos»
+
+Es una app pequeña que lee las notificaciones de Yape y de tus bancos y las manda a tu cuenta. No está en la Play Store; se instala desde el enlace.
+
+1. En el celular, abre la app web → **Ajustes → Avisos desde el celular** → **Descargar app para Android**.
+2. Abre el archivo descargado (`mis-gastos-avisos.apk`). Android pedirá permiso para **instalar apps desconocidas** desde Chrome: actívalo y toca **Instalar**. Si sale un aviso de Play Protect, toca **Más detalles → Instalar de todas formas**.
+3. Vuelve a la app web y toca **Copiar dirección**. Abre **Mis gastos avisos** y sigue sus 4 pasos:
+   1. **Dar permiso:** activa **Mis gastos avisos** en "Acceso a notificaciones".
+      - Si sale **"Ajuste restringido"** y no te deja activarlo (pasa en Android 13 o más nuevo con apps que no vienen de la Play Store): ve a **Ajustes del celular → Aplicaciones → Mis gastos avisos →** menú **⋮** arriba a la derecha **→ Permitir ajustes restringidos**. Luego vuelve a **Dar permiso**.
+   2. **Pegar** la dirección y tocar **Probar**: en unos segundos aparece un gasto de S/ 1.00 en Movimientos.
+   3. Revisa que estén marcados **Yape** y las apps de tus bancos (se marcan solos la primera vez).
+   4. **Ajustes de batería:** elige **Sin restricciones** o **No optimizar**, para que Android no la apague.
+4. Haz un yapeo pequeño de prueba.
+
+Solo salen del celular las notificaciones de las apps marcadas **que traen un monto** (S/ o US$). Si no hay internet, se guardan y se mandan después.
+
+> **Importante para Iván:** la firma de la app está en `C:\Users\IVAN\herramientas-android\firma\` (archivo `mis-gastos.jks` y la clave en `android\firma.properties`). Guarda una copia en un lugar seguro: sin ella, las actualizaciones no se podrán instalar encima de la app y cada persona tendría que desinstalarla primero.
+
+### Android, otra opción: MacroDroid
+
+Si prefieres no instalar la app, MacroDroid hace lo mismo:
 
 1. Instala **MacroDroid** desde la Play Store.
 2. En la app de gastos, entra a **Ajustes → Avisos desde el celular**. Ahí usarás dos botones: **Copiar dirección** y **Copiar cuerpo para MacroDroid**.

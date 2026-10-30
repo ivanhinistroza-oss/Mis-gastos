@@ -1,0 +1,7 @@
+.gradle/
+build/
+app/build/
+local.properties
+# La firma de la app es privada: nunca se sube a GitHub.
+firma.properties
+*.jks
