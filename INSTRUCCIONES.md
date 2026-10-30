@@ -33,10 +33,10 @@ En Firebase (proyecto **mis gastos**): **Seguridad → Authentication → Métod
 
 ### 4. Publicar la app en internet (GitHub Pages)
 
-1. En GitHub crea un repositorio **público** llamado `mis-gastos`.
+1. En GitHub crea un repositorio **público** llamado `Mis-gastos`.
 2. Sube `index.html` (puedes arrastrarlo en **Add file → Upload files**).
 3. En el repositorio: **Settings → Pages →** Branch: `main` (o `master`) → carpeta `/ (root)` → **Save**.
-4. En un par de minutos, la app queda en **https://ivanhinistroza-oss.github.io/mis-gastos/**.
+4. En un par de minutos, la app queda en **https://ivanhinistroza-oss.github.io/Mis-gastos/**.
 
 ### 5. Autorizar esa dirección en Firebase
 
@@ -46,7 +46,7 @@ En Firebase (proyecto **mis gastos**): **Seguridad → Authentication → Métod
 
 ## Parte 2. Cada persona (incluido tú)
 
-1. Abre **https://ivanhinistroza-oss.github.io/mis-gastos/** en el celular y toca **Entrar con Google**.
+1. Abre **https://ivanhinistroza-oss.github.io/Mis-gastos/** en el celular y toca **Entrar con Google**.
 2. Ponla en la pantalla de inicio:
    - **Android (Chrome):** menú ⋮ → **Agregar a la pantalla principal**.
    - **iPhone (Safari):** botón **Compartir** → **Agregar a inicio**.
