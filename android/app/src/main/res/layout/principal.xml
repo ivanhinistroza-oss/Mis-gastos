@@ -1,100 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <WebView
+        android:id="@+id/web"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/sinInternet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/fondo"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="16dp">
-
+        android:padding="32dp"
+        android:visibility="gone">
         <TextView
-            style="@style/Titulo"
-            android:text="1. Permiso para leer notificaciones" />
-        <TextView
-            android:id="@+id/estadoPermiso"
-            style="@style/Texto" />
-        <Button
-            android:id="@+id/btnPermiso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dar permiso" />
-
-        <TextView
-            style="@style/Titulo"
-            android:text="2. Dirección del buzón" />
-        <TextView
-            style="@style/Texto"
-            android:text="En la app web, entra a Ajustes → Avisos desde el celular → Copiar dirección. Luego toca Pegar aquí." />
-        <EditText
-            android:id="@+id/url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="https://firestore.googleapis.com/…"
-            android:inputType="textUri"
-            android:maxLines="3"
-            android:textSize="13sp" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btnPegar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pegar" />
-            <Button
-                android:id="@+id/btnGuardar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Guardar" />
-            <Button
-                android:id="@+id/btnPrueba"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Probar" />
-        </LinearLayout>
-
-        <TextView
-            style="@style/Titulo"
-            android:text="3. Apps de las que se leen avisos" />
+            android:text="Sin conexión"
+            android:textColor="@color/texto"
+            android:textSize="20sp"
+            android:textStyle="bold" />
         <TextView
             style="@style/Texto"
-            android:text="Marca Yape y las apps de tus bancos. Solo se mandan los avisos que traen un monto (S/ o US$)." />
-        <LinearLayout
-            android:id="@+id/listaApps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <TextView
-            style="@style/Titulo"
-            android:text="4. Que Android no la apague" />
-        <TextView
-            style="@style/Texto"
-            android:text="Busca «Mis gastos avisos» en la lista y elige «Sin restricciones» o «No optimizar»." />
+            android:gravity="center"
+            android:text="La primera vez necesitas internet para ver tus gastos. Mientras tanto, los avisos de Yape y del banco se siguen guardando y se mandan solos." />
         <Button
-            android:id="@+id/btnBateria"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ajustes de batería" />
-
-        <TextView
-            style="@style/Titulo"
-            android:text="Últimos avisos enviados" />
-        <TextView
-            android:id="@+id/estadoEnvio"
-            style="@style/Texto"
-            android:textColor="#B7791F" />
-        <Button
-            android:id="@+id/btnReintentar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reintentar pendientes" />
-        <TextView
-            android:id="@+id/registro"
-            style="@style/Texto"
-            android:textIsSelectable="true" />
+            android:id="@+id/btnReintentarWeb"
+            style="@style/Boton"
+            android:layout_marginTop="20dp"
+            android:text="Reintentar" />
     </LinearLayout>
-</ScrollView>
+</FrameLayout>

@@ -15,8 +15,12 @@ android {
         applicationId 'pe.misgastos.avisos'
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName '1.0'
+        versionCode 2
+        versionName '2.0'
+        // La app muestra la web publicada. La versión de prueba (debug) muestra la copia de la PC,
+        // servida en el puerto 8123 (10.0.2.2 es la PC vista desde el emulador).
+        buildConfigField 'String', 'WEB', '"https://ivanhinistroza-oss.github.io/Mis-gastos/"'
+        manifestPlaceholders = [textoClaro: 'false']
     }
 
     signingConfigs {
@@ -30,7 +34,15 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     buildTypes {
+        debug {
+            buildConfigField 'String', 'WEB', '"http://10.0.2.2:8123/"'
+            manifestPlaceholders = [textoClaro: 'true']
+        }
         release {
             minifyEnabled false
             if (archivoFirma.exists()) signingConfig signingConfigs.release

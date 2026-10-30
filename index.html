@@ -20,14 +20,18 @@
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body { margin: 0; background: var(--bg); color: var(--txt); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-header { position: sticky; top: 0; z-index: 5; background: var(--card); border-bottom: 1px solid var(--line); }
-.top { max-width: 820px; margin: 0 auto; padding: 10px 16px 0; }
-h1 { font-size: 20px; margin: 0 0 8px; }
+header { position: sticky; top: 0; z-index: 5; color: #fff; background: linear-gradient(135deg, #5b21b6, #7c3aed 60%, #9333ea); box-shadow: 0 2px 10px rgba(76, 29, 149, .25); }
+.top { max-width: 820px; margin: 0 auto; padding: 12px 16px 0; }
+.titulo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+h1 { font-size: 21px; margin: 0; }
+#totalMes { font-size: 12px; text-align: right; opacity: .9; }
+#totalMes b { display: block; font-size: 16px; }
 nav { display: flex; gap: 4px; overflow-x: auto; }
-nav button { flex: 1; background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 6px; font: inherit; color: var(--muted); cursor: pointer; white-space: nowrap; }
-nav button.on { color: var(--pri); border-bottom-color: var(--pri); font-weight: 600; }
+nav button { flex: 1; background: none; border: 0; border-bottom: 3px solid transparent; padding: 8px 6px; font: inherit; color: rgba(255, 255, 255, .72); cursor: pointer; white-space: nowrap; }
+nav button.on { color: #fff; border-bottom-color: #fff; font-weight: 600; }
 main { max-width: 820px; margin: 0 auto; padding: 16px; }
-.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(16, 24, 40, .06); }
+.card.destacada { border-color: var(--pri); border-left-width: 4px; }
 h2 { font-size: 16px; margin: 0 0 6px; }
 h3 { font-size: 14px; margin: 14px 0 6px; color: var(--muted); font-weight: 600; }
 .muted { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
@@ -37,9 +41,9 @@ label { display: block; font-size: 12px; color: var(--muted); }
 label > input, label > select { margin-top: 2px; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
-button.b, a.b { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--txt); cursor: pointer; }
-a.b { display: inline-block; }
-.b.pri { background: var(--pri); color: var(--pri-txt); border-color: var(--pri); }
+button.b, a.b { font: inherit; font-weight: 500; padding: 9px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); color: var(--txt); cursor: pointer; }
+a.b { display: inline-block; text-decoration: none; }
+.b.pri { background: var(--pri); color: var(--pri-txt); border-color: var(--pri); box-shadow: 0 2px 6px rgba(108, 43, 217, .3); }
 button.peligro { color: var(--gasto); }
 .prev { border-left: 4px solid var(--pri); }
 .prev.dup { border-left-color: var(--warn); }
@@ -57,7 +61,7 @@ button.peligro { color: var(--gasto); }
 .monto { font-weight: 700; white-space: nowrap; }
 .g { color: var(--gasto); } .i { color: var(--ingreso); }
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
-.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(16, 24, 40, .06); }
 .kpi .t { font-size: 12px; color: var(--muted); }
 .kpi .v { font-size: 20px; font-weight: 700; }
 .kpi .s { font-size: 12px; color: var(--muted); }
@@ -68,6 +72,20 @@ button.peligro { color: var(--gasto); }
 .dias { display: flex; align-items: flex-end; gap: 2px; height: 120px; padding-top: 6px; }
 .dias div { flex: 1; background: var(--bar); border-radius: 2px 2px 0 0; min-height: 1px; position: relative; }
 .dias div.cero { background: var(--bar2); }
+.dona { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.dona svg { flex: none; width: 150px; height: 150px; margin: 0 auto; }
+.dona .dt { font-size: 11px; fill: var(--muted); }
+.dona .dv { font-size: 12px; font-weight: 700; fill: var(--txt); }
+.leyenda { flex: 1; min-width: 200px; }
+.leyenda div { display: grid; grid-template-columns: 12px 1fr auto; gap: 8px; align-items: center; font-size: 13px; margin: 5px 0; }
+.leyenda i { width: 12px; height: 12px; border-radius: 3px; }
+.leyenda .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.meses { display: flex; align-items: flex-end; gap: 6px; }
+.meses .col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--muted); }
+.meses .bar { width: 100%; max-width: 44px; background: var(--bar2); border-radius: 6px 6px 0 0; margin: 3px 0 4px; }
+.meses .col.on { color: var(--txt); font-weight: 600; }
+.meses .col.on .bar { background: var(--bar); }
+.meses .val { white-space: nowrap; }
 .ejes { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
 .meta { height: 14px; background: var(--bg); border-radius: 7px; overflow: hidden; margin: 6px 0 4px; }
 .meta div { height: 100%; background: var(--ingreso); }
@@ -83,7 +101,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 <body>
 <header>
   <div class="top">
-    <h1>Mis gastos</h1>
+    <div class="titulo"><h1>Mis gastos</h1><div id="totalMes"></div></div>
     <nav id="tabs">
       <button data-v="agregar" class="on">Agregar</button>
       <button data-v="movs">Movimientos</button>
@@ -95,6 +113,11 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 
 <main>
   <section id="v-agregar" hidden>
+    <div class="card destacada" id="appAviso" hidden>
+      <h2>Falta un paso</h2>
+      <p class="muted">Activa la lectura de avisos para que tus yapeos y compras se anoten solos.</p>
+      <button class="b pri" id="btnAppAviso">Activar ahora</button>
+    </div>
     <div class="card" id="gmailAviso" hidden>
       <h2>Correos del banco</h2>
       <p class="muted">Toca para traer los gastos que llegaron a tu Gmail.</p>
@@ -134,10 +157,11 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 
   <section id="v-entrar" hidden>
     <div class="card">
-      <h2>Bienvenido</h2>
-      <p class="muted">Lleva en orden lo que gastas con Yape, Plin y tarjetas. Entra con tu cuenta de Google: tus gastos quedan guardados y los ves en cualquier celular o computadora. Nadie más puede verlos.</p>
+      <h2 id="entrarTitulo">Bienvenido</h2>
+      <p class="muted" id="entrarIntro">Lleva en orden lo que gastas con Yape, Plin y tarjetas. Entra con tu cuenta de Google: tus gastos quedan guardados y los ves en cualquier celular o computadora. Nadie más puede verlos.</p>
       <p class="muted" id="entrarMsg">Cargando…</p>
       <button class="b pri" id="btnEntrar" hidden>Entrar con Google</button>
+      <a class="b pri" id="btnVolverApp" hidden>Volver a la app</a>
     </div>
   </section>
 
@@ -149,12 +173,18 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
     </div>
     <div class="card" id="celular" hidden>
       <h2>Avisos desde el celular</h2>
-      <p class="muted">En Android, la app «Mis gastos avisos» lee las notificaciones de Yape y de tus bancos y las manda aquí. En iPhone se usa Atajos. Las dos necesitan esta dirección; la guía explica cada paso. No la compartas: con ella cualquiera podría mandarte avisos.</p>
-      <div class="row" style="margin-top:0;margin-bottom:10px"><a class="b pri" href="mis-gastos-avisos.apk" download style="text-decoration:none">Descargar app para Android</a></div>
-      <label>Dirección (URL)<input id="buzonUrl" readonly></label>
-      <div class="row">
-        <button class="b" id="btnCopiarUrl">Copiar dirección</button>
-        <button class="b" id="btnCopiarCuerpo">Copiar cuerpo para MacroDroid</button>
+      <div id="celApp" hidden>
+        <p class="muted" id="celEstado"></p>
+        <button class="b pri" id="btnConfigAndroid">Configurar lectura de avisos</button>
+      </div>
+      <div id="celWeb">
+        <p class="muted">En Android, la app «Mis gastos» lee las notificaciones de Yape y de tus bancos y las anota aquí. En iPhone se usa Atajos, que necesita esta dirección; la guía explica cada paso. No la compartas: con ella cualquiera podría mandarte avisos.</p>
+        <div class="row" style="margin-top:0;margin-bottom:10px"><a class="b pri" href="mis-gastos-avisos.apk" download>Descargar app para Android</a></div>
+        <label>Dirección (URL)<input id="buzonUrl" readonly></label>
+        <div class="row">
+          <button class="b" id="btnCopiarUrl">Copiar dirección</button>
+          <button class="b" id="btnCopiarCuerpo">Copiar cuerpo para MacroDroid</button>
+        </div>
       </div>
       <div class="row">
         <button class="b" id="btnProbar">Mandar un aviso de prueba</button>
@@ -245,6 +275,16 @@ const GMAIL_PERMISO = "https://www.googleapis.com/auth/gmail.readonly";
 // Correos que se revisan. Si tu banco no aparece, agrega su nombre dentro de los paréntesis.
 const GMAIL_BUSQUEDA = 'from:(bcp OR interbank OR bbva OR scotiabank OR yape OR plin OR banbif OR pichincha OR "banco de la nacion")';
 
+// Dentro de la app de Android, la página trae este puente para hablar con el celular.
+const ANDROID = typeof window.MisGastosAndroid === "object" ? window.MisGastosAndroid : null;
+const APP = !!ANDROID;
+// Google no deja entrar desde dentro de una app, así que la app abre esta página en el navegador
+// con #app-login=… ; aquí la persona elige su cuenta y vuelve a la app con el permiso.
+const LOGIN_APP = APP ? "" : ((/^#app-login=([\w-]{16,64})$/.exec(location.hash) || [])[1] || "");
+// Un color por categoría, en el mismo orden que CATS.
+const COLOR_CAT = ["#f97316", "#2563eb", "#0891b2", "#059669", "#dc2626", "#a16207", "#db2777",
+  "#c026d3", "#7c3aed", "#0d9488", "#f59e0b", "#64748b", "#16a34a", "#9ca3af"];
+
 let data = FB ? { movs: [], aprendido: {}, presupuesto: 0 } : cargar();
 let previa = [];
 let editando = null;
@@ -253,6 +293,8 @@ let usuario = null;   // usuario de Firebase que entró
 let perfil = {};      // usuarios/{uid}: codigo, presupuesto, aprendido, gmail, gmailDesde
 let cargado = false;  // ya llegaron los movimientos de Firebase
 let escuchas = [];
+let fbListo;
+const esperarFirebase = new Promise((r) => { fbListo = r; });
 
 // ---------- Datos ----------
 function cargar() {
@@ -312,11 +354,16 @@ async function iniciarFirebase() {
     const auth = A.getAuth(app);
     auth.languageCode = "es";
     fb = { A, F, fs, auth };
+    fbListo();
+    if (LOGIN_APP) { pintarLoginApp(); return; }
     A.onAuthStateChanged(auth, (u) => {
       detener();
       usuario = u;
-      if (u) { ir("agregar"); escuchar(); }
-      else { $("#entrarMsg").textContent = ""; $("#btnEntrar").hidden = false; ir("entrar"); }
+      if (u) { ir("agregar"); escuchar(); return; }
+      if (APP) ANDROID.guardarBuzon("");  // que el celular deje de mandar avisos a la cuenta anterior
+      $("#entrarMsg").textContent = APP ? "Se abrirá el navegador para que elijas tu cuenta de Google. Después vuelves aquí solo." : "";
+      $("#btnEntrar").hidden = false;
+      ir("entrar");
     });
   } catch (e) {
     console.error(e);
@@ -324,9 +371,54 @@ async function iniciarFirebase() {
   }
 }
 async function entrar() {
+  if (APP) { ANDROID.entrarConGoogle(); return; }
+  if (LOGIN_APP) { entrarParaApp(); return; }
   try { await fb.A.signInWithPopup(fb.auth, new fb.A.GoogleAuthProvider()); }
   catch (e) { if (!/popup-closed|cancelled-popup/.test(e.code || "")) toast("No se pudo entrar: " + (e.code || e.message)); }
 }
+// ---------- Entrar desde la app de Android ----------
+// 1) En el navegador: la persona elige su cuenta y la página le pasa a la app el permiso de Google.
+function pintarLoginApp() {
+  ir("entrar");
+  $("#entrarTitulo").textContent = "Entrar a la app de Android";
+  $("#entrarIntro").hidden = true;
+  $("#entrarMsg").textContent = "Elige tu cuenta de Google. Luego vuelves a la app Mis gastos.";
+  $("#btnEntrar").textContent = "Elegir cuenta de Google";
+  $("#btnEntrar").hidden = false;
+}
+async function entrarParaApp() {
+  try {
+    const p = new fb.A.GoogleAuthProvider();
+    p.setCustomParameters({ prompt: "select_account" });
+    const r = await fb.A.signInWithPopup(fb.auth, p);
+    const cred = fb.A.GoogleAuthProvider.credentialFromResult(r);
+    if (!cred || !cred.idToken) throw new Error("Google no dio el permiso");
+    // "package" hace que solo la app Mis gastos pueda recibirlo.
+    const url = "intent://login#Intent;scheme=misgastos;package=pe.misgastos.avisos;S.estado=" + LOGIN_APP +
+      ";S.token=" + encodeURIComponent(cred.idToken) + ";end";
+    $("#btnEntrar").hidden = true;
+    $("#btnVolverApp").href = url;
+    $("#btnVolverApp").hidden = false;
+    $("#entrarMsg").textContent = "Listo, " + (r.user.email || "") + ". Toca «Volver a la app».";
+    location.href = url;
+  } catch (e) {
+    if (!/popup-closed|cancelled-popup/.test(e.code || "")) toast("No se pudo entrar: " + (e.code || e.message));
+  }
+}
+// 2) En la app: recibe ese permiso y entra con él.
+window.entrarDesdeApp = async (token) => {
+  await esperarFirebase;
+  $("#entrarMsg").textContent = "Entrando…";
+  try { await fb.A.signInWithCredential(fb.auth, fb.A.GoogleAuthProvider.credential(token)); }
+  catch (e) { $("#entrarMsg").textContent = ""; toast("No se pudo entrar: " + (e.code || e.message)); }
+};
+// Botón "atrás" del celular: true si la página lo usó; si no, la app se cierra.
+window.atrasApp = () => {
+  if ($("#dlg").open) { $("#dlg").close(); return true; }
+  if (vista !== "agregar" && vista !== "entrar") { ir("agregar"); return true; }
+  return false;
+};
+window.alVolverApp = () => refrescar();
 function detener() {
   escuchas.forEach((fn) => { try { fn(); } catch (e) {} });
   escuchas = [];
@@ -542,9 +634,13 @@ function base64(s) {
 }
 function pintarCuenta() {
   const dentro = FB && !!usuario;
-  ["#cuenta", "#celular", "#correo"].forEach((s) => { $(s).hidden = !dentro; });
-  $("#gmailAviso").hidden = !(dentro && perfil.gmail && !tokenGmail());
+  ["#cuenta", "#celular"].forEach((s) => { $(s).hidden = !dentro; });
+  // Google no deja dar el permiso de Gmail dentro de la app; eso se hace en el navegador.
+  $("#correo").hidden = !dentro || APP;
+  $("#gmailAviso").hidden = !(dentro && !APP && perfil.gmail && !tokenGmail());
+  $("#appAviso").hidden = true;
   if (!dentro) return;
+  if (APP) pintarAndroid();
   $("#cuentaCorreo").textContent = "Entraste como " + (usuario.email || usuario.displayName || "");
   $("#buzonUrl").value = urlBuzon() || "Creando tu dirección…";
   const con = !!perfil.gmail;
@@ -555,6 +651,16 @@ function pintarCuenta() {
   $("#gmailEstado").textContent = !con
     ? "Si tu banco te manda un correo por cada compra, la app puede leerlos y anotarlos sola. Google te pedirá permiso para leer tu Gmail."
     : "Conectado. Se revisa al abrir la app" + (ultima ? "; última revisión: " + ultima.toLocaleString("es-PE", { dateStyle: "short", timeStyle: "short" }) : "") + ".";
+}
+// En la app de Android: le pasa la dirección del buzón (así no hay que copiarla) y muestra si falta algo.
+function pintarAndroid() {
+  if (urlBuzon()) ANDROID.guardarBuzon(urlBuzon());
+  let e = {};
+  try { e = JSON.parse(ANDROID.estado()); } catch (x) {}
+  $("#appAviso").hidden = !!e.permiso;
+  $("#celEstado").textContent = !e.permiso
+    ? "Falta activar el permiso para leer las notificaciones."
+    : "Activado: tus yapeos y compras se anotan solos" + (e.apps ? " (de " + e.apps + (e.apps === 1 ? " app)." : " apps).") : ".");
 }
 function nuevoId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
@@ -586,6 +692,7 @@ function toast(t) {
   clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("ver"), 2600);
 }
 function descargar(nombre, texto, tipo) {
+  if (APP) { ANDROID.guardarArchivo(nombre, texto, tipo); return; }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([texto], { type: tipo }));
   a.download = nombre;
@@ -856,6 +963,35 @@ function agrupar(movs, clave) {
   for (const m of movs) r[m[clave] || "(sin nombre)"] = (r[m[clave] || "(sin nombre)"] || 0) + m.monto;
   return Object.entries(r).sort((a, b) => b[1] - a[1]);
 }
+function colorCat(n) { const i = CATS.indexOf(n); return i < 0 ? "#6b7280" : COLOR_CAT[i]; }
+function dona(pares, total) {
+  const r = 52, c = 2 * Math.PI * r;
+  let hecho = 0, arcos = "";
+  for (const [n, v] of pares) {
+    const l = v / total * c;
+    arcos += `<circle r="${r}" cx="70" cy="70" fill="none" stroke="${colorCat(n)}" stroke-width="22"
+      stroke-dasharray="${l.toFixed(2)} ${(c - l).toFixed(2)}" stroke-dashoffset="${(-hecho).toFixed(2)}" transform="rotate(-90 70 70)"/>`;
+    hecho += l;
+  }
+  return `<div class="dona"><svg viewBox="0 0 140 140" role="img" aria-label="Gastos por categoría">${arcos}
+    <text x="70" y="66" text-anchor="middle" class="dt">Total</text>
+    <text x="70" y="83" text-anchor="middle" class="dv">${esc(dinero(total))}</text></svg>
+    <div class="leyenda">${pares.map(([n, v]) => `<div><i style="background:${colorCat(n)}"></i><span class="nm">${esc(n)}</span>
+      <span>${dinero(v)} <span class="muted">${Math.round(v / total * 100)}%</span></span></div>`).join("")}</div></div>`;
+}
+function gastadoEn(mes) {
+  return data.movs.filter((m) => mesDe(m.fecha) === mes && m.tipo === "gasto" && m.moneda !== "USD").reduce((s, m) => s + m.monto, 0);
+}
+function seisMeses(mes) {
+  const meses = [mes];
+  while (meses.length < 6) meses.unshift(mesAnterior(meses[0]));
+  const tot = meses.map(gastadoEn), max = Math.max(...tot, 1);
+  const corto = (n) => n >= 1000 ? (n / 1000).toFixed(1).replace(".0", "") + " mil" : String(Math.round(n));
+  const nombre = (m) => { const [y, mm] = m.split("-").map(Number); return new Date(y, mm - 1, 1).toLocaleDateString("es-PE", { month: "short" }).replace(".", ""); };
+  return `<div class="card"><h2>Últimos 6 meses</h2><p class="muted">Gastado en soles</p><div class="meses">${meses.map((m, i) =>
+    `<div class="col${m === mes ? " on" : ""}"><span class="val">${tot[i] ? corto(tot[i]) : ""}</span>
+      <div class="bar" style="height:${Math.max(tot[i] / max * 100, 2).toFixed(0)}px"></div><span>${esc(nombre(m))}</span></div>`).join("")}</div></div>`;
+}
 function pintarResumen() {
   const mes = $("#rMes").value || mesActual();
   const delMes = data.movs.filter((m) => mesDe(m.fecha) === mes);
@@ -898,6 +1034,9 @@ function pintarResumen() {
       ${resta >= 0 ? "te quedan " + dinero(resta) : "te pasaste por " + dinero(-resta)}</div></div>`;
   } else html += `<div style="height:14px"></div>`;
 
+  if (gastos.length) html += `<div class="card"><h2>¿En qué se fue?</h2>${dona(agrupar(gastos, "categoria"), gastado)}</div>`;
+  html += seisMeses(mes);
+
   const porDia = Array(diasMes).fill(0);
   for (const m of gastos) porDia[+m.fecha.slice(8) - 1] += m.monto;
   const maxDia = Math.max(...porDia, 1);
@@ -905,7 +1044,6 @@ function pintarResumen() {
     <div class="dias">${porDia.map((v, i) => `<div class="${v ? "" : "cero"}" style="height:${v ? Math.max(v / maxDia * 100, 2) : 1}%" title="Día ${i + 1}: ${dinero(v)}"></div>`).join("")}</div>
     <div class="ejes"><span>1</span><span>${Math.ceil(diasMes / 2)}</span><span>${diasMes}</span></div></div>`;
   if (gastos.length) {
-    html += `<div class="card"><h2>Por categoría</h2>${barras(agrupar(gastos, "categoria"), gastado)}</div>`;
     html += `<div class="card"><h2>Por medio de pago</h2>${barras(agrupar(gastos, "medio"), gastado)}</div>`;
     html += `<div class="card"><h2>A quién más le pagaste</h2>${barras(agrupar(gastos, "destino").slice(0, 8), gastado)}</div>`;
   }
@@ -953,6 +1091,8 @@ function refrescar() {
   // No pisar el presupuesto mientras la persona lo escribe.
   if (vista === "ajustes" && document.activeElement !== $("#presupuesto")) $("#presupuesto").value = data.presupuesto || 0;
   if (FB) pintarCuenta();
+  const conDatos = vista !== "entrar" && (!FB || cargado);
+  $("#totalMes").innerHTML = conDatos ? "Este mes<b>" + esc(dinero(gastadoEn(mesActual()))) + "</b>" : "";
 }
 
 document.querySelectorAll("#tabs button").forEach((b) => { b.onclick = () => ir(b.dataset.v); });
@@ -994,8 +1134,13 @@ $("#btnCopiarUrl").onclick = () => { if (urlBuzon()) copiar(urlBuzon(), "Direcci
 $("#btnCopiarCuerpo").onclick = () => copiar(CUERPO_ANDROID, "Cuerpo copiado");
 $("#btnProbar").onclick = mandarPrueba;
 $("#btnNuevoCodigo").onclick = () => {
-  if (confirm("¿Cambiar la dirección? La anterior dejará de funcionar y tendrás que poner la nueva en MacroDroid o Atajos.")) crearCodigo(perfil.codigo);
+  if (confirm(APP ? "¿Cambiar la dirección? La anterior dejará de funcionar. Esta app usará la nueva sola."
+    : "¿Cambiar la dirección? La anterior dejará de funcionar y tendrás que poner la nueva en la app de Android, MacroDroid o Atajos.")) crearCodigo(perfil.codigo);
 };
+$("#btnAppAviso").onclick = () => ANDROID.abrirConfiguracion();
+$("#btnConfigAndroid").onclick = () => ANDROID.abrirConfiguracion();
+$("#celApp").hidden = !APP;
+$("#celWeb").hidden = APP;
 $("#btnGmail").onclick = conectarGmail;
 $("#btnGmailRevisar").onclick = () => revisarGmail(true);
 $("#btnGmailAviso").onclick = () => revisarGmail(true);

@@ -1,18 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Titulo">
+    <color name="morado">#6C2BD9</color>
+    <color name="morado_oscuro">#5B21B6</color>
+    <color name="fondo">#F5F6F8</color>
+    <color name="texto">#1D2330</color>
+    <color name="gris">#6B7280</color>
+    <color name="verde">#1E8E4E</color>
+    <color name="naranja">#B7791F</color>
+    <color name="fondo_icono">#6C2BD9</color>
+
+    <style name="Tema" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/morado</item>
+        <item name="android:colorPrimaryDark">@color/morado_oscuro</item>
+        <item name="android:colorAccent">@color/morado</item>
+        <item name="android:statusBarColor">@color/morado_oscuro</item>
+        <item name="android:windowBackground">@color/fondo</item>
+    </style>
+    <style name="Tema.ConBarra" parent="@android:style/Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/morado</item>
+        <item name="android:colorPrimaryDark">@color/morado_oscuro</item>
+        <item name="android:colorAccent">@color/morado</item>
+        <item name="android:statusBarColor">@color/morado_oscuro</item>
+        <item name="android:windowBackground">@color/fondo</item>
+    </style>
+
+    <style name="Tarjeta">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">@drawable/tarjeta</item>
+        <item name="android:elevation">1dp</item>
+    </style>
+    <style name="Titulo">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#6C2BD9</item>
+        <item name="android:textColor">@color/texto</item>
     </style>
     <style name="Texto">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginTop">6dp</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/gris</item>
     </style>
-    <color name="fondo_icono">#6C2BD9</color>
+    <style name="Etiqueta">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Boton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:background">@drawable/boton</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+    <style name="Boton.Claro">
+        <item name="android:background">@drawable/boton_claro</item>
+        <item name="android:textColor">@color/morado</item>
+    </style>
 </resources>

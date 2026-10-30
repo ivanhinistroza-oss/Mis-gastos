@@ -50,14 +50,14 @@ final class Envio {
         String url = Prefs.url(c);
         JSONArray p = Prefs.pendientes(c);
         if (p.length() == 0) return;
-        if (url.isEmpty()) { Prefs.guardarError(c, "Falta pegar la dirección del buzón."); return; }
+        if (url.isEmpty()) { Prefs.guardarError(c, "Falta entrar con tu cuenta en la app."); return; }
         while (p.length() > 0) {
             JSONObject a = p.optJSONObject(0);
             int codigo = a == null ? 200 : mandar(url, a.optString("texto"), a.optString("fuente", "android"));
             if (codigo < 200 || codigo >= 300) {
                 Prefs.guardarError(c, codigo == -1
                     ? "Sin internet. Se mandará cuando vuelva la conexión."
-                    : "La dirección del buzón no funciona (error " + codigo + "). Cópiala otra vez desde la app web.");
+                    : "Tu cuenta no aceptó el aviso (error " + codigo + "). Abre la app para actualizarla.");
                 return;
             }
             p.remove(0);

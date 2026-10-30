@@ -53,21 +53,25 @@ En Firebase (proyecto **mis gastos**): **Seguridad → Authentication → Métod
 3. **Correos del banco (opcional):** **Ajustes → Conectar Gmail**. Acepta el aviso de Google: toca **Configuración avanzada → Ir a Mis gastos** y marca la casilla de Gmail. Desde ahí, cada vez que abras la app se traen los gastos que llegaron por correo.
    - El permiso de Google dura una hora. Si pasa más tiempo, en **Agregar** aparece el botón **Revisar correos**: tócalo y listo.
 
-### Android: app «Mis gastos avisos»
+### Android: app «Mis gastos»
 
-Es una app pequeña que lee las notificaciones de Yape y de tus bancos y las manda a tu cuenta. No está en la Play Store; se instala desde el enlace.
+Es la app completa para Android: muestra tus gastos, el resumen y los gráficos, y además lee las notificaciones de Yape y de tus bancos para anotarlas sola. No está en la Play Store; se instala desde el enlace.
 
-1. En el celular, abre la app web → **Ajustes → Avisos desde el celular** → **Descargar app para Android**.
-2. Abre el archivo descargado (`mis-gastos-avisos.apk`). Android pedirá permiso para **instalar apps desconocidas** desde Chrome: actívalo y toca **Instalar**. Si sale un aviso de Play Protect, toca **Más detalles → Instalar de todas formas**.
-3. Vuelve a la app web y toca **Copiar dirección**. Abre **Mis gastos avisos** y sigue sus 4 pasos:
-   1. **Dar permiso:** activa **Mis gastos avisos** en "Acceso a notificaciones".
-      - Si sale **"Ajuste restringido"** y no te deja activarlo (pasa en Android 13 o más nuevo con apps que no vienen de la Play Store): ve a **Ajustes del celular → Aplicaciones → Mis gastos avisos →** menú **⋮** arriba a la derecha **→ Permitir ajustes restringidos**. Luego vuelve a **Dar permiso**.
-   2. **Pegar** la dirección y tocar **Probar**: en unos segundos aparece un gasto de S/ 1.00 en Movimientos.
-   3. Revisa que estén marcados **Yape** y las apps de tus bancos (se marcan solos la primera vez).
-   4. **Ajustes de batería:** elige **Sin restricciones** o **No optimizar**, para que Android no la apague.
-4. Haz un yapeo pequeño de prueba.
+1. En el celular, abre en **Chrome**: **ivanhinistroza-oss.github.io/Mis-gastos/mis-gastos-avisos.apk**. Si Chrome avisa que el archivo puede ser dañino, toca **Descargar de todas formas**.
+2. Abre el archivo descargado. Android pedirá permiso para **instalar apps desconocidas** desde Chrome: actívalo y toca **Instalar**. Si sale un aviso de Play Protect, toca **Más detalles → Instalar de todas formas**.
+3. Abre **Mis gastos** y toca **Entrar con Google**. Se abre el navegador: elige tu cuenta y toca **Volver a la app**.
+4. Arriba aparece **Falta un paso → Activar ahora**. Esa pantalla te muestra qué falta, con una marca verde en cada paso listo:
+   1. **Leer notificaciones:** toca **Activar** y prende **Mis gastos** en la lista.
+      - Si sale **"Ajuste restringido"** y no te deja (pasa en Android 13 o más nuevo con apps que no vienen de la Play Store): ve a **Ajustes del celular → Aplicaciones → Mis gastos →** menú **⋮** arriba a la derecha **→ Permitir ajustes restringidos**. Luego vuelve a **Activar**.
+   2. **Tu cuenta:** se conecta sola al entrar. Toca **Mandar un aviso de prueba**: en unos segundos aparece un gasto de S/ 1.00 en Movimientos.
+   3. **Apps que se leen:** Yape y las apps de tus bancos se marcan solas. Con **Elegir otras apps** puedes agregar más.
+   4. **Que Android no la apague:** toca **Permitir** y acepta.
+5. Haz un yapeo pequeño de prueba.
 
 Solo salen del celular las notificaciones de las apps marcadas **que traen un monto** (S/ o US$). Si no hay internet, se guardan y se mandan después.
+
+> **Si ya tenías la versión anterior («Mis gastos avisos»):** instala la nueva encima, sin desinstalar. Entra con Google una vez y listo.
+> **Gmail** no se puede conectar dentro de la app (Google no lo permite). Si lo usas, conéctalo desde la web en Chrome.
 
 > **Importante para Iván:** la firma de la app está en `C:\Users\IVAN\herramientas-android\firma\` (archivo `mis-gastos.jks` y la clave en `android\firma.properties`). Guarda una copia en un lugar seguro: sin ella, las actualizaciones no se podrán instalar encima de la app y cada persona tendría que desinstalarla primero.
 
@@ -119,6 +123,6 @@ En **Ajustes → Mandar un aviso de prueba** llega un gasto de S/ 1.00 a "Prueba
 - **Revisa las categorías:** la app las adivina. Si una está mal, tócala en Movimientos y cámbiala; la próxima vez que pagues al mismo lugar, la recordará.
 - **Avisos repetidos:** si el mismo gasto llega por la notificación y por el correo, la app guarda uno solo.
 - **Sin internet** puedes anotar gastos igual; se suben solos cuando vuelve la conexión.
-- **Si alguien conoce tu dirección:** en **Ajustes → Cambiar dirección**, la anterior deja de funcionar. Luego pon la nueva en MacroDroid o Atajos.
+- **Si alguien conoce tu dirección:** en **Ajustes → Cambiar dirección**, la anterior deja de funcionar. Luego pon la nueva en MacroDroid o Atajos (la app de Android se actualiza sola).
 - **Quitar el permiso de Gmail:** en **Ajustes → Desconectar Gmail**. Para quitarlo del todo, entra a **myaccount.google.com/permissions**.
 - **Abrir el archivo directo** (doble clic en `index.html`): funciona sin cuenta y guarda los datos solo en ese navegador.

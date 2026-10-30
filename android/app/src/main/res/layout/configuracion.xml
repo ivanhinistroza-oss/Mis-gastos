@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Resumen: cuántos pasos faltan. -->
+        <LinearLayout
+            style="@style/Tarjeta"
+            android:background="@drawable/cabecera"
+            android:elevation="3dp">
+            <TextView
+                android:id="@+id/resumenPasos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/resumenTexto"
+                style="@style/Texto"
+                android:textColor="#E9DDFD" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Tarjeta">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView style="@style/Titulo" android:text="1. Leer notificaciones" />
+                <TextView android:id="@+id/etqPermiso" style="@style/Etiqueta" />
+            </LinearLayout>
+            <TextView android:id="@+id/txtPermiso" style="@style/Texto" />
+            <Button android:id="@+id/btnPermiso" style="@style/Boton" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Tarjeta">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView style="@style/Titulo" android:text="2. Tu cuenta" />
+                <TextView android:id="@+id/etqCuenta" style="@style/Etiqueta" />
+            </LinearLayout>
+            <TextView android:id="@+id/txtCuenta" style="@style/Texto" />
+            <Button
+                android:id="@+id/btnProbar"
+                style="@style/Boton.Claro"
+                android:text="Mandar un aviso de prueba" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Tarjeta">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView style="@style/Titulo" android:text="3. Apps que se leen" />
+                <TextView android:id="@+id/etqApps" style="@style/Etiqueta" />
+            </LinearLayout>
+            <TextView
+                style="@style/Texto"
+                android:text="Marca Yape y las apps de tus bancos. Solo se mandan los avisos que traen un monto (S/ o US$)." />
+            <LinearLayout
+                android:id="@+id/listaApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical" />
+            <Button
+                android:id="@+id/btnTodas"
+                style="@style/Boton.Claro" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Tarjeta">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+                <TextView style="@style/Titulo" android:text="4. Que Android no la apague" />
+                <TextView android:id="@+id/etqBateria" style="@style/Etiqueta" />
+            </LinearLayout>
+            <TextView android:id="@+id/txtBateria" style="@style/Texto" />
+            <Button android:id="@+id/btnBateria" style="@style/Boton" android:text="Permitir" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/Tarjeta">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Últimos avisos enviados"
+                android:textColor="@color/texto"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/estadoEnvio"
+                style="@style/Texto"
+                android:textColor="@color/naranja" />
+            <Button
+                android:id="@+id/btnReintentar"
+                style="@style/Boton.Claro"
+                android:text="Reintentar ahora" />
+            <TextView
+                android:id="@+id/registro"
+                style="@style/Texto"
+                android:textIsSelectable="true" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Para pedir con un toque que Android no apague la app. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <!-- Para listar las apps instaladas y elegir de cuáles leer avisos. -->
     <queries>
@@ -14,22 +17,39 @@
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="Mis gastos avisos"
-        android:theme="@android:style/Theme.Material.Light.DarkActionBar">
+        android:label="Mis gastos"
+        android:theme="@style/Tema"
+        android:usesCleartextTraffic="${textoClaro}">
 
+        <!-- La app web, con tus gastos. Recibe también el regreso del navegador al entrar con Google. -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="misgastos" android:host="login" />
+            </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ConfigActivity"
+            android:exported="false"
+            android:label="Lectura de avisos"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Tema.ConBarra" />
 
         <service
             android:name=".Escucha"
             android:exported="true"
-            android:label="Mis gastos avisos"
+            android:label="Mis gastos"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />

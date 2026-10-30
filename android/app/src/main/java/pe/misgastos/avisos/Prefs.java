@@ -18,7 +18,7 @@ final class Prefs {
         return c.getSharedPreferences("avisos", Context.MODE_PRIVATE);
     }
 
-    /** Dirección del buzón, copiada desde Ajustes en la app web. */
+    /** Dirección del buzón; la pasa la web al entrar con tu cuenta. */
     static String url(Context c) { return de(c).getString("url", ""); }
     static void guardarUrl(Context c, String url) { de(c).edit().putString("url", url).commit(); }
 
@@ -39,6 +39,10 @@ final class Prefs {
         for (int i = 0; i < viejo.length() && i < 14; i++) nuevo.put(viejo.optString(i));
         de(c).edit().putString("registro", nuevo.toString()).commit();
     }
+
+    /** Código de un solo uso para reconocer el regreso del navegador al entrar con Google. */
+    static String estadoLogin(Context c) { return de(c).getString("estadoLogin", ""); }
+    static void guardarEstadoLogin(Context c, String e) { de(c).edit().putString("estadoLogin", e).commit(); }
 
     static String error(Context c) { return de(c).getString("error", ""); }
     static void guardarError(Context c, String e) { de(c).edit().putString("error", e).commit(); }
